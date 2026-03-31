@@ -242,14 +242,19 @@
             <button onclick="navigate('home')" class="text-gray-400 hover:text-white mb-8 self-start"><i class="fas fa-arrow-left mr-2"></i>Kembali</button>
             <div class="glass-panel p-8 rounded-2xl w-full max-w-md border-t-4 border-blue-500 text-center relative overflow-hidden">
                 <i class="fas fa-lock text-6xl text-gray-700 absolute -right-4 -bottom-4 opacity-20"></i>
-                <h2 class="text-2xl font-bold mb-6 text-white tracking-widest">--- 🔐 TEACHER LOGIN ---</h2>
+                <h2 class="text-2xl font-bold mb-6 text-white tracking-widest">--- 🔐 LOGIN GURU ---</h2>
                 <p class="text-gray-400 text-sm mb-6">Area ini dilindungi. Masukkan password guru untuk mengakses Menu Guru.</p>
                 
-                <input type="password" id="teacher-pwd" placeholder="Input Password Guru" class="w-full bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-blue-500 focus:border-blue-500 block p-3 mb-4 tracking-widest">
+                <div class="relative mb-4">
+                    <input type="password" id="teacher-pwd" placeholder="Input Password Guru" class="w-full bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-blue-500 focus:border-blue-500 block p-3 tracking-widest pr-10">
+                    <button type="button" onclick="togglePassword('teacher-pwd', this)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
                 <button onclick="loginTeacher()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition shadow-lg shadow-blue-500/30">
                     Otorisasi Akses
                 </button>
-                <p class="text-xs text-gray-500 mt-4">Hint demo: ketik "admin123"</p>
+                <p class="text-xs text-gray-500 mt-4">Untuk Mendapatkan Password,Silahkan WhatsApp : 0895336886100</p>
             </div>
         </div>
 
@@ -486,7 +491,12 @@
                 
                 <div class="flex space-x-2 mb-4">
                     <input type="text" id="wali-kelas-target" placeholder="Kelas (Mis: 10A)" class="w-1/3 bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-teal-500 focus:border-teal-500 block p-3 uppercase font-bold">
-                    <input type="password" id="wali-pwd" placeholder="Password Wali Kelas" class="w-2/3 bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-teal-500 focus:border-teal-500 block p-3 tracking-widest">
+                    <div class="relative w-2/3">
+                        <input type="password" id="wali-pwd" placeholder="Password Wali Kelas" class="w-full bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-teal-500 focus:border-teal-500 block p-3 tracking-widest pr-10">
+                        <button type="button" onclick="togglePassword('wali-pwd', this)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
                 
                 <button onclick="loginWaliKelas()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded transition shadow-lg shadow-teal-500/30">
@@ -513,11 +523,16 @@
                 <div class="space-y-4 mb-6">
                     <div>
                         <input type="text" id="reg-admin-code" placeholder="Ketik Kode Rahasia Admin..." class="w-full bg-gray-900 border border-orange-500 text-orange-300 text-center rounded focus:ring-orange-500 focus:border-orange-500 block p-3 font-mono tracking-widest uppercase">
-                        <p class="text-[10px] text-gray-500 mt-1">Hint demo: ADMIN123</p>
+                        <p class="text-[10px] text-gray-500 mt-1">Kode Rahasia Silahkan WhatsApp : 0895336886100</p>
                     </div>
                     <input type="text" id="reg-nama" placeholder="Nama Lengkap Guru (Mis: Bpk. Budi)" class="w-full bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-teal-500 focus:border-teal-500 block p-3">
                     <input type="text" id="reg-kelas" placeholder="Kelas Binaan (Mis: 10A)" class="w-full bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-teal-500 focus:border-teal-500 block p-3 uppercase font-bold">
-                    <input type="password" id="reg-pwd" placeholder="Buat Password Akun" class="w-full bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-teal-500 focus:border-teal-500 block p-3 tracking-widest">
+                    <div class="relative">
+                        <input type="password" id="reg-pwd" placeholder="Buat Password Akun" class="w-full bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-teal-500 focus:border-teal-500 block p-3 tracking-widest pr-10">
+                        <button type="button" onclick="togglePassword('reg-pwd', this)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
                 
                 <button onclick="registerWaliKelas()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded transition shadow-lg shadow-orange-500/30">
@@ -572,18 +587,6 @@
                         </div>
                     </div>
 
-                    <!-- Database Links -->
-                    <div class="glass-panel p-6 rounded-xl border border-gray-700">
-                        <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-database text-orange-400 mr-2"></i> 📊 Data Terkirim ke Server</h3>
-                        <p class="text-xs text-gray-400 mb-4">Project ID: <span class="text-white font-mono">portal-ujian-online</span></p>
-                        <div class="space-y-2">
-                            <button onclick="showModal('Firebase Data Terekam!', 'Semua data murid disimpan dalam 1 database utama dengan label Kelas.\nSaat di-export ke Excel, Kepala Sekolah/Admin dapat langsung mem-filter berdasarkan kelas masing-masing.', 'info')" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-600 text-left text-sm text-white py-2 px-4 rounded transition flex justify-between items-center">
-                                <span><i class="fas fa-table text-blue-400 mr-2"></i> Info Sinkronisasi DB</span>
-                                <i class="fas fa-cloud-upload-alt text-gray-500"></i>
-                            </button>
-                        </div>
-                    </div>
-
                     <!-- Input Kehadiran Manual -->
                     <div class="glass-panel p-6 rounded-xl border-t-4 border-red-500">
                         <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-user-edit text-red-400 mr-2"></i> 📝 Catatan Kehadiran Guru</h3>
@@ -613,8 +616,23 @@
                 <!-- Kolom Kanan: Monitoring Anak Wali -->
                 <div class="lg:col-span-2 glass-panel p-6 rounded-xl border-t-4 border-teal-500 flex flex-col h-full">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold text-white"><i class="fas fa-users-viewfinder text-teal-400 mr-2"></i> 📡 Live Monitor Absensi Kelas</h3>
-                        <span class="text-xs bg-gray-800 border border-gray-600 text-green-400 py-1 px-3 rounded"><i class="fas fa-filter mr-1"></i> Hanya Kelas Sendiri</span>
+                        <h3 class="text-xl font-bold text-white"><i class="fas fa-users-viewfinder text-teal-400 mr-2"></i> 📡 Monitor Absensi Kelas</h3>
+                        <!-- FILTER HARI UNTUK WALI KELAS & TOMBOL EXPORT DITAMBAHKAN DI SINI -->
+                        <div class="flex space-x-2 items-center">
+                            <button onclick="exportKeCSV()" class="bg-green-700 hover:bg-green-600 border border-green-500 text-white text-xs py-1 px-3 rounded transition flex items-center shadow-lg" title="Download Excel/CSV untuk Google Sheets">
+                                <i class="fas fa-file-excel mr-1"></i> Export Data
+                            </button>
+                            <select id="filter-hari-walikelas" onchange="filterHariAbsensi()" class="bg-gray-800 border border-gray-600 text-teal-400 text-xs rounded px-2 py-1 focus:ring-teal-500 focus:border-teal-500 outline-none cursor-pointer">
+                                <option value="Semua">Semua Hari</option>
+                                <option value="Senin">Senin</option>
+                                <option value="Selasa">Selasa</option>
+                                <option value="Rabu">Rabu</option>
+                                <option value="Kamis">Kamis</option>
+                                <option value="Jumat">Jumat</option>
+                                <option value="Sabtu">Sabtu</option>
+                                <option value="Minggu">Minggu</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="overflow-y-auto flex-1 bg-gray-900 rounded-lg border border-gray-700 p-2 custom-scrollbar">
                         <table class="w-full text-left text-sm">
@@ -626,7 +644,7 @@
                                     <th class="p-3 border-b border-gray-700">Waktu</th>
                                     <th class="p-3 border-b border-gray-700">Status</th>
                                     <th class="p-3 border-b border-gray-700 max-w-[150px]">Catatan</th>
-                                    <th class="p-3 border-b border-gray-700 text-center">Validasi</th>
+                                    <th class="p-3 border-b border-gray-700 text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="walikelas-absen-body">
@@ -635,6 +653,10 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <!-- Instruksi WA -->
+                    <div class="mt-3 bg-gray-800/50 border border-green-800/50 p-2 rounded text-xs text-gray-400 flex items-center justify-center">
+                        <i class="fab fa-whatsapp text-green-500 text-lg mr-2"></i> <span>Klik logo WA pada tabel untuk membuat rangkuman otomatis khusus untuk siswa tersebut.</span>
                     </div>
                 </div>
             </div>
@@ -743,6 +765,8 @@
         window.currentRoomCode = "FIS10A";
         window.activeWaliKelas = ""; 
         window.activeWaliNama = ""; // Menyimpan Nama Guru yg Login
+        window.activeFilterHari = "Semua"; // TRACKING FILTER HARI WALI KELAS
+        
         let examDuration = 60; // menit
         let countdownInterval;
         let bankSoal = []; 
@@ -751,6 +775,21 @@
         function navigate(viewId) {
             document.querySelectorAll('main > div[id^="view-"]').forEach(el => el.classList.add('hidden-view'));
             document.getElementById(`view-${viewId}`).classList.remove('hidden-view');
+        }
+
+        // --- FUNGSI TOGGLE PASSWORD VISIBILITY ---
+        window.togglePassword = function(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
         }
 
         // --- SISTEM POPUP MODAL ---
@@ -890,6 +929,133 @@
             }
         }
 
+        // --- FILTER HARI (WALI KELAS) ---
+        window.filterHariAbsensi = function() {
+            window.activeFilterHari = document.getElementById('filter-hari-walikelas').value;
+            if(window.renderTabelAbsensi) window.renderTabelAbsensi(); // Render ulang dengan filter yang baru
+        }
+
+        // --- EXPORT KE CSV (GOOGLE SHEETS/EXCEL) ---
+        window.exportKeCSV = function() {
+            if (!window.dataAbsensi || window.dataAbsensi.length === 0) {
+                showModal("Data Kosong", "Belum ada data absensi untuk diekspor ke Google Sheets/Excel.", "error");
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            // Header CSV
+            csvContent += "Nama Murid,Kelas,Hari,Tanggal,Waktu,Status,Catatan\n"; 
+
+            let hasData = false;
+            window.dataAbsensi.forEach(item => {
+                // Filter hanya untuk kelas Wali yang login
+                if (window.activeWaliKelas === "" || item.kelas.toUpperCase() === window.activeWaliKelas) {
+                    // Filter berdasarkan hari yang sedang di-select
+                    let isHariMatch = true;
+                    if (window.activeFilterHari !== "Semua") {
+                        const dataHari = item.hari ? item.hari.toLowerCase().replace("'", "") : "";
+                        const filterHari = window.activeFilterHari.toLowerCase();
+                        isHariMatch = (dataHari === filterHari);
+                    }
+
+                    if (isHariMatch) {
+                        hasData = true;
+                        // Escape quotes untuk menghindari format csv yang rusak jika ada koma di catatan
+                        let safeNama = item.nama ? item.nama.replace(/"/g, '""') : "";
+                        let safeCatatan = item.catatan ? item.catatan.replace(/"/g, '""') : "";
+                        
+                        let row = `"${safeNama}","${item.kelas}","${item.hari}","${item.tanggal}","${item.waktu}","${item.status}","${safeCatatan}"`;
+                        csvContent += row + "\n";
+                    }
+                }
+            });
+
+            if (!hasData) {
+                showModal("Data Kosong", "Tidak ada data yang sesuai dengan filter Hari/Kelas saat ini.", "error");
+                return;
+            }
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            const namaFile = `Rekap_Absensi_${window.activeWaliKelas || 'Semua'}_${window.activeFilterHari}.csv`;
+            link.setAttribute("download", namaFile);
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showModal("Export Berhasil", `File CSV (${namaFile}) berhasil diunduh.\n\nAnda bisa langsung mengunggahnya ke Google Sheets untuk melakukan filter per anak.`, "success");
+        }
+
+        // --- REKAP WHATSAPP PER SISWA (FITUR EKSTRA) ---
+        window.rekapSiswaWA = function(namaSiswa) {
+            if(!window.dataAbsensi) return;
+            
+            // Format Data yang akan dihitung
+            let rekap = { Hadir: 0, Izin: 0, Sakit: 0, Bolos: 0, Alpa: 0 };
+            let history = [];
+
+            // Kumpulkan hanya data milik Siswa yang dipilih dan di Kelas tersebut
+            window.dataAbsensi.forEach(item => {
+                if (item.nama === namaSiswa && (window.activeWaliKelas === "" || item.kelas.toUpperCase() === window.activeWaliKelas)) {
+                    if(rekap[item.status] !== undefined) rekap[item.status]++;
+                    let noteInfo = item.catatan ? ` (Catatan: ${item.catatan})` : '';
+                    history.push(`${item.tanggal} - ${item.hari}: ${item.status}${noteInfo}`);
+                }
+            });
+
+            // Bangun Template Pesan WhatsApp
+            let pesan = `Halo Bapak/Ibu Orang Tua dari *${namaSiswa}* (Kelas ${window.activeWaliKelas}).\n\n`;
+            pesan += `Berikut adalah rekap absensi ananda yang tercatat di sistem:\n\n`;
+            pesan += `🟢 Hadir: ${rekap.Hadir} Hari\n`;
+            pesan += `🟡 Izin: ${rekap.Izin} Hari\n`;
+            pesan += `🔵 Sakit: ${rekap.Sakit} Hari\n`;
+            pesan += `🔴 Bolos: ${rekap.Bolos} Kali\n`;
+            pesan += `⚫ Alpa (Tanpa Keterangan): ${rekap.Alpa} Hari\n\n`;
+            pesan += `*Rincian 5 Hari Terakhir:*\n`;
+            
+            if(history.length === 0) {
+                pesan += `- Belum ada data\n`;
+            } else {
+                // Ambil 5 data history teratas
+                history.slice(0, 5).forEach(h => pesan += `- ${h}\n`); 
+            }
+            pesan += `\nMohon bantuannya untuk dipantau di rumah. Terima kasih banyak. 🙏\n`;
+            pesan += `\n_Pesan otomatis dari Wali Kelas via Portal Sekolah Digital_`;
+
+            // Konversi teks menjadi link resmi WhatsApp API
+            let waLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(pesan)}`;
+
+            // Tampilkan ke Modal khusus WhatsApp
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('custom-modal-content');
+
+            content.innerHTML = `
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-green-900/50 border-2 border-green-500 shadow-lg shadow-green-500/30">
+                        <i class="fab fa-whatsapp text-4xl text-green-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Rekap Absensi: ${namaSiswa}</h3>
+                    <p class="text-gray-400 text-xs mb-4">Pesan sudah dirangkum otomatis dan siap dikirim ke Orang Tua.</p>
+                    
+                    <textarea class="w-full bg-gray-900 border border-gray-700 text-gray-300 text-sm p-3 rounded h-48 mb-4 font-mono resize-none custom-scrollbar outline-none" readonly>${pesan}</textarea>
+                    
+                    <a href="${waLink}" target="_blank" onclick="closeModal()" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded transition shadow-lg mb-2">
+                        Buka & Kirim via WhatsApp
+                    </a>
+                    <button onclick="closeModal()" class="w-full text-gray-400 hover:text-white text-sm py-2 transition">Batal</button>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
         // Render Data Absensi dari variabel global (yang diupdate oleh onSnapshot)
         window.renderTabelAbsensi = function() {
             const tbodySiswa = document.getElementById('absen-table-body');
@@ -918,7 +1084,10 @@
                 const verifIcon = item.isValid ? '<i class="fas fa-check-circle text-green-500"></i>' : '<i class="fas fa-times-circle text-red-500"></i>';
                 const catatanText = item.catatan ? item.catatan : '<span class="text-gray-600 italic">-</span>';
 
-                // Tabel Siswa
+                // Escape single quote pada nama siswa agar tombol WA tidak rusak
+                const safeNamaFunction = item.nama ? item.nama.replace(/'/g, "\\'") : "Siswa";
+
+                // Tabel Siswa (Semua Data)
                 htmlSiswa += `
                     <tr class="border-b border-gray-700/50 hover:bg-gray-800/50 transition">
                         <td class="p-2 font-semibold">${item.nama}</td>
@@ -929,8 +1098,20 @@
                     </tr>
                 `;
 
-                // FILTERING TABEL WALI KELAS
-                if (window.activeWaliKelas === "" || item.kelas.toUpperCase() === window.activeWaliKelas) {
+                // FILTERING TABEL WALI KELAS BERDASARKAN KELAS & HARI
+                const isKelasMatch = (window.activeWaliKelas === "" || item.kelas.toUpperCase() === window.activeWaliKelas);
+                
+                // Pengecekan aman untuk hari
+                let isHariMatch = false;
+                if (window.activeFilterHari === "Semua") {
+                    isHariMatch = true;
+                } else if (item.hari) {
+                    const dataHari = item.hari.toLowerCase().replace("'", ""); // Hilangkan tanda petik misal Jum'at -> jumat
+                    const filterHari = window.activeFilterHari.toLowerCase();
+                    isHariMatch = (dataHari === filterHari);
+                }
+
+                if (isKelasMatch && isHariMatch) {
                     countWali++;
                     htmlWali += `
                         <tr class="border-b border-gray-700/50 hover:bg-gray-800/50 transition">
@@ -940,7 +1121,12 @@
                             <td class="p-3 text-gray-400 font-mono">${item.waktu}</td>
                             <td class="p-3">${badge}</td>
                             <td class="p-3 text-xs text-gray-300 max-w-[150px] truncate" title="${item.catatan}">${catatanText}</td>
-                            <td class="p-3 text-center text-lg">${verifIcon}</td>
+                            <td class="p-3 text-center whitespace-nowrap">
+                                <span class="text-lg align-middle mr-2">${verifIcon}</span>
+                                <button onclick="rekapSiswaWA('${safeNamaFunction}')" class="bg-green-600 hover:bg-green-500 text-white p-2 rounded shadow-lg transition align-middle" title="Buat Pesan WA Otomatis untuk Orang Tua">
+                                    <i class="fab fa-whatsapp"></i>
+                                </button>
+                            </td>
                         </tr>
                     `;
                 }
@@ -950,7 +1136,8 @@
             
             if (tbodyWali) {
                 if(countWali === 0) {
-                    tbodyWali.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-gray-500 italic">Belum ada absen dari murid kelas ${window.activeWaliKelas} hari ini...</td></tr>`;
+                    let displayHari = window.activeFilterHari === "Semua" ? "sebelumnya" : window.activeFilterHari;
+                    tbodyWali.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-gray-500 italic">Belum ada absen dari murid kelas ${window.activeWaliKelas} pada hari ${displayHari}...</td></tr>`;
                 } else {
                     tbodyWali.innerHTML = htmlWali;
                 }
@@ -978,7 +1165,7 @@
             const pwd = document.getElementById('reg-pwd').value;
 
             // KODE RAHASIA ADMIN (Mencegah Sembarang Orang Buat Akun)
-            if (adminCode !== "ADMIN123") {
+            if (adminCode !== "merdeka1945") {
                 showModal("Akses Ditolak", "Kode Rahasia Admin yang Anda masukkan SALAH.\nAnda tidak memiliki izin membuat akun.", "error");
                 return;
             }
@@ -1049,6 +1236,10 @@
                         // Update UI Dashboard sesuai kelas guru yang login
                         document.getElementById('display-active-kelas').innerText = `- ${targetKelas} (${dataAkun.nama})`;
                         document.getElementById('manual-kelas').value = targetKelas; 
+                        
+                        // Reset Dropdown Hari ke "Semua" saat baru login
+                        document.getElementById('filter-hari-walikelas').value = "Semua";
+                        window.activeFilterHari = "Semua";
                         
                         navigate('guru-walikelas'); 
                         document.getElementById('wali-pwd').value = '';
