@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PORTAL SEKOLAH DIGITAL - ULUL ALBAB</title>
+    <title>PORTAL SEKOLAH DIGITAL - SMP ULUL ALBAB</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -73,7 +73,7 @@
                 <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500 tracking-wider">
                     PORTAL SEKOLAH DIGITAL
                 </h1>
-                <p class="text-sm text-gray-400 font-semibold tracking-widest">ULUL ALBAB</p>
+                <p class="text-sm text-gray-400 font-semibold tracking-widest">SMP ULUL ALBAB</p>
             </div>
         </div>
         <div id="nav-actions" class="hidden md:flex space-x-4">
@@ -126,7 +126,7 @@
             </div>
         </div>
 
-        <!-- ==================== MENU SISWA (BARU) ==================== -->
+        <!-- ==================== MENU SISWA ==================== -->
         <div id="view-siswa-menu" class="hidden-view space-y-8">
             <button onclick="navigate('home')" class="text-gray-400 hover:text-white mb-4"><i class="fas fa-arrow-left mr-2"></i>Kembali ke Beranda</button>
             <h2 class="text-3xl font-bold border-b-2 border-cyan-500 pb-2 inline-block"><i class="fas fa-user-graduate mr-3 text-cyan-400"></i>PORTAL SISWA</h2>
@@ -157,7 +157,6 @@
             <button onclick="navigate('siswa-menu')" class="text-gray-400 hover:text-white mb-4"><i class="fas fa-arrow-left mr-2"></i>Kembali ke Menu Siswa</button>
             
             <div class="max-w-4xl mx-auto">
-                <!-- Absensi Digital -->
                 <div class="glass-panel p-6 rounded-xl border-t-4 border-cyan-500">
                     <h3 class="text-xl font-bold mb-2 flex items-center text-white"><i class="fas fa-fingerprint text-cyan-400 mr-2 text-2xl"></i> ⏱️ Absensi Digital</h3>
                     <p class="text-sm text-gray-400 mb-4 bg-gray-800 p-2 rounded border border-gray-700">
@@ -201,9 +200,7 @@
             <button onclick="navigate('siswa-menu')" class="text-gray-400 hover:text-white mb-4"><i class="fas fa-arrow-left mr-2"></i>Kembali ke Menu Siswa</button>
             
             <div class="max-w-4xl mx-auto">
-                <!-- Portal Ujian Online -->
                 <div class="glass-panel p-6 rounded-xl border-t-4 border-red-500 relative overflow-hidden">
-                    <!-- Secure background pattern -->
                     <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #ef4444 0, #ef4444 1px, transparent 0, transparent 20px);"></div>
                     
                     <h3 class="text-xl font-bold mb-2 flex items-center text-white relative z-10"><i class="fas fa-shield-alt text-red-400 mr-2 text-2xl"></i> ✍️ Portal Ujian Online (Secure Room)</h3>
@@ -211,7 +208,6 @@
                     <div id="exam-login-area" class="mt-6 relative z-10">
                         <label class="block mb-2 text-sm font-medium text-gray-300">Akses Secure Room</label>
                         <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
-                            <!-- Field Nama Murid Ditambahkan Agar Tercatat di Firebase -->
                             <input type="text" id="exam-nama-input" placeholder="Nama Anda" class="w-full md:w-1/3 bg-gray-900 border border-gray-600 text-white text-sm rounded focus:ring-red-500 focus:border-red-500 block p-3">
                             <input type="text" id="room-code-input" placeholder="Ketik Kode ROOM Ujian" class="flex-1 bg-gray-900 border border-gray-600 text-white text-lg rounded focus:ring-red-500 focus:border-red-500 block p-3 font-mono tracking-widest text-center uppercase">
                             <button onclick="enterExamRoom()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded transition shadow-lg shadow-red-500/30">
@@ -257,7 +253,7 @@
             </div>
         </div>
 
-        <!-- ==================== MENU GURU (BARU) ==================== -->
+        <!-- ==================== MENU GURU ==================== -->
         <div id="view-guru-menu" class="hidden-view space-y-8">
             <div class="flex justify-between items-end border-b-2 border-blue-500 pb-2">
                 <div>
@@ -359,7 +355,7 @@
                                 <div><label class="text-xs text-gray-400">Opsi D</label><input type="text" id="opt-d" class="w-full bg-gray-900 border border-gray-600 text-white text-sm rounded p-1"></div>
                             </div>
 
-                            <!-- INPUT KUNCI JAWABAN (BARU) -->
+                            <!-- INPUT KUNCI JAWABAN -->
                             <div id="kunci-pg-div" class="mt-2">
                                 <label class="block text-xs text-green-400 mb-1 font-bold">Kunci Jawaban PG</label>
                                 <select id="manual-kunci-pg" class="w-full bg-gray-900 border border-green-600 text-white text-sm rounded p-2 focus:ring-green-500">
@@ -486,13 +482,47 @@
             <div class="glass-panel p-8 rounded-2xl w-full max-w-md border-t-4 border-teal-500 text-center relative overflow-hidden">
                 <i class="fas fa-users-cog text-6xl text-gray-700 absolute -right-4 -bottom-4 opacity-20"></i>
                 <h2 class="text-2xl font-bold mb-6 text-white tracking-widest">--- 🔐 LOGIN WALI KELAS ---</h2>
-                <p class="text-gray-400 text-sm mb-6">Akses Data Sensitif Murid. Masukkan PIN Wali Kelas.</p>
+                <p class="text-gray-400 text-sm mb-6">Akses Data Sensitif Murid. Masukkan Kelas dan Password Anda.</p>
                 
-                <input type="password" id="wali-pwd" placeholder="Input PIN Wali Kelas" class="w-full bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-teal-500 focus:border-teal-500 block p-3 mb-4 tracking-widest">
+                <div class="flex space-x-2 mb-4">
+                    <input type="text" id="wali-kelas-target" placeholder="Kelas (Mis: 10A)" class="w-1/3 bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-teal-500 focus:border-teal-500 block p-3 uppercase font-bold">
+                    <input type="password" id="wali-pwd" placeholder="Password Wali Kelas" class="w-2/3 bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-teal-500 focus:border-teal-500 block p-3 tracking-widest">
+                </div>
+                
                 <button onclick="loginWaliKelas()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded transition shadow-lg shadow-teal-500/30">
-                    Buka Dashboard
+                    Buka Dashboard Kelas
                 </button>
-                <p class="text-xs text-gray-500 mt-4">Hint demo: ketik "wali123"</p>
+
+                <div class="mt-6 pt-4 border-t border-gray-700">
+                    <p class="text-xs text-gray-500 mb-3">Belum memiliki akses Wali Kelas?</p>
+                    <button onclick="navigate('guru-walikelas-register')" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-600 text-teal-300 font-bold py-2 px-4 rounded transition text-sm">
+                        <i class="fas fa-user-plus mr-1"></i> Buat Akun Wali Kelas
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== AREA REGISTER WALI KELAS ==================== -->
+        <div id="view-guru-walikelas-register" class="hidden-view flex flex-col items-center justify-center py-10">
+            <button onclick="navigate('guru-walikelas-login')" class="text-gray-400 hover:text-white mb-8 self-start"><i class="fas fa-arrow-left mr-2"></i>Kembali ke Login</button>
+            <div class="glass-panel p-8 rounded-2xl w-full max-w-md border-t-4 border-orange-500 text-center relative overflow-hidden">
+                <i class="fas fa-user-plus text-6xl text-gray-700 absolute -right-4 -bottom-4 opacity-20"></i>
+                <h2 class="text-2xl font-bold mb-6 text-white tracking-widest">--- 📝 DAFTAR WALI KELAS ---</h2>
+                <p class="text-gray-400 text-sm mb-6">Masukkan Kode Admin Rahasia untuk membuktikan otoritas Anda.</p>
+                
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <input type="text" id="reg-admin-code" placeholder="Ketik Kode Rahasia Admin..." class="w-full bg-gray-900 border border-orange-500 text-orange-300 text-center rounded focus:ring-orange-500 focus:border-orange-500 block p-3 font-mono tracking-widest uppercase">
+                        <p class="text-[10px] text-gray-500 mt-1">Hint demo: ADMIN123</p>
+                    </div>
+                    <input type="text" id="reg-nama" placeholder="Nama Lengkap Guru (Mis: Bpk. Budi)" class="w-full bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-teal-500 focus:border-teal-500 block p-3">
+                    <input type="text" id="reg-kelas" placeholder="Kelas Binaan (Mis: 10A)" class="w-full bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-teal-500 focus:border-teal-500 block p-3 uppercase font-bold">
+                    <input type="password" id="reg-pwd" placeholder="Buat Password Akun" class="w-full bg-gray-900 border border-gray-600 text-white text-center rounded focus:ring-teal-500 focus:border-teal-500 block p-3 tracking-widest">
+                </div>
+                
+                <button onclick="registerWaliKelas()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded transition shadow-lg shadow-orange-500/30">
+                    <i class="fas fa-check-circle mr-1"></i> Daftarkan Akun
+                </button>
             </div>
         </div>
 
@@ -500,8 +530,9 @@
         <div id="view-guru-walikelas" class="hidden-view space-y-8">
             <div class="flex justify-between items-end border-b-2 border-teal-500 pb-2">
                 <div>
-                    <button onclick="navigate('guru-menu')" class="text-gray-400 hover:text-white mb-2 text-sm"><i class="fas fa-arrow-left mr-2"></i>Kembali</button>
-                    <h2 class="text-3xl font-bold text-white"><i class="fas fa-users text-teal-400 mr-3"></i>DASHBOARD WALI KELAS</h2>
+                    <button onclick="navigate('home')" class="text-gray-400 hover:text-white mb-2 text-sm"><i class="fas fa-arrow-left mr-2"></i>Kembali</button>
+                    <!-- JUDUL KELAS DINAMIS -->
+                    <h2 class="text-3xl font-bold text-white"><i class="fas fa-users text-teal-400 mr-3"></i>DASHBOARD WALI KELAS <span id="display-active-kelas" class="text-teal-300"></span></h2>
                 </div>
                 <div class="hidden sm:block">
                     <span class="bg-teal-900/50 text-teal-300 px-3 py-1 rounded-full text-xs border border-teal-700"><i class="fas fa-shield-alt mr-1"></i> Wali Kelas Access</span>
@@ -546,21 +577,22 @@
                         <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-database text-orange-400 mr-2"></i> 📊 Data Terkirim ke Server</h3>
                         <p class="text-xs text-gray-400 mb-4">Project ID: <span class="text-white font-mono">portal-ujian-online</span></p>
                         <div class="space-y-2">
-                            <button onclick="showModal('Firebase Data Terekam!', 'Semua aksi absen yang dilakukan murid hari ini sudah dipush secara langsung ke koleksi Firestore: \n[ public/data/absensi ] \n\nSilakan buka Firebase Console Anda untuk melihat JSON raw-nya.', 'info')" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-600 text-left text-sm text-white py-2 px-4 rounded transition flex justify-between items-center">
+                            <button onclick="showModal('Firebase Data Terekam!', 'Semua data murid disimpan dalam 1 database utama dengan label Kelas.\nSaat di-export ke Excel, Kepala Sekolah/Admin dapat langsung mem-filter berdasarkan kelas masing-masing.', 'info')" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-600 text-left text-sm text-white py-2 px-4 rounded transition flex justify-between items-center">
                                 <span><i class="fas fa-table text-blue-400 mr-2"></i> Info Sinkronisasi DB</span>
                                 <i class="fas fa-cloud-upload-alt text-gray-500"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Input Kehadiran Manual (BARU) -->
+                    <!-- Input Kehadiran Manual -->
                     <div class="glass-panel p-6 rounded-xl border-t-4 border-red-500">
                         <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-user-edit text-red-400 mr-2"></i> 📝 Catatan Kehadiran Guru</h3>
                         <p class="text-xs text-gray-400 mb-4">Input manual untuk murid yang bolos, alpa, atau izin khusus.</p>
                         <div class="space-y-3">
                             <div class="flex space-x-2">
                                 <input type="text" id="manual-nama" placeholder="Nama Murid" class="w-2/3 bg-gray-900 border border-gray-600 text-white text-sm rounded focus:ring-red-500 focus:border-red-500 block p-2">
-                                <input type="text" id="manual-kelas" placeholder="Kelas" class="w-1/3 bg-gray-900 border border-gray-600 text-white text-sm rounded focus:ring-red-500 focus:border-red-500 block p-2 uppercase">
+                                <!-- FIELD KELAS DIBUAT READONLY KARENA SUDAH DISET SAAT LOGIN -->
+                                <input type="text" id="manual-kelas" readonly class="w-1/3 bg-gray-800 border border-gray-600 text-gray-400 text-sm rounded block p-2 uppercase cursor-not-allowed text-center" title="Terkunci pada kelas Anda">
                             </div>
                             <select id="manual-status" class="w-full bg-gray-900 border border-gray-600 text-white text-sm rounded focus:ring-red-500 focus:border-red-500 block p-2">
                                 <option value="Bolos">🔴 Bolos Kelas</option>
@@ -582,7 +614,7 @@
                 <div class="lg:col-span-2 glass-panel p-6 rounded-xl border-t-4 border-teal-500 flex flex-col h-full">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-bold text-white"><i class="fas fa-users-viewfinder text-teal-400 mr-2"></i> 📡 Live Monitor Absensi Kelas</h3>
-                        <span class="text-xs bg-gray-800 border border-gray-600 text-green-400 py-1 px-3 rounded"><i class="fas fa-circle-notch fa-spin mr-1"></i> Terhubung ke Firebase</span>
+                        <span class="text-xs bg-gray-800 border border-gray-600 text-green-400 py-1 px-3 rounded"><i class="fas fa-filter mr-1"></i> Hanya Kelas Sendiri</span>
                     </div>
                     <div class="overflow-y-auto flex-1 bg-gray-900 rounded-lg border border-gray-700 p-2 custom-scrollbar">
                         <table class="w-full text-left text-sm">
@@ -621,7 +653,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Tambahkan getDoc dan setDoc untuk fitur Registrasi Akun
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Konfigurasi Firebase Anda
         const firebaseConfig = {
@@ -647,6 +680,8 @@
         window.fbServerTimestamp = serverTimestamp;
         window.fbDoc = doc;
         window.fbUpdateDoc = updateDoc;
+        window.fbGetDoc = getDoc;
+        window.fbSetDoc = setDoc;
 
         // Auth & Realtime Setup
         signInAnonymously(auth).catch((error) => console.error("Firebase Auth Error:", error));
@@ -706,10 +741,12 @@
         // State Variabel Lokal
         window.activeTeacherToken = "";
         window.currentRoomCode = "FIS10A";
+        window.activeWaliKelas = ""; 
+        window.activeWaliNama = ""; // Menyimpan Nama Guru yg Login
         let examDuration = 60; // menit
         let countdownInterval;
         let bankSoal = []; 
-        let currentLiveExamId = null; // Menyimpan ID dokumen Firestore siswa ujian
+        let currentLiveExamId = null; 
 
         function navigate(viewId) {
             document.querySelectorAll('main > div[id^="view-"]').forEach(el => el.classList.add('hidden-view'));
@@ -860,6 +897,7 @@
             
             let htmlSiswa = '';
             let htmlWali = '';
+            let countWali = 0;
             
             const listData = window.dataAbsensi || [];
 
@@ -880,6 +918,7 @@
                 const verifIcon = item.isValid ? '<i class="fas fa-check-circle text-green-500"></i>' : '<i class="fas fa-times-circle text-red-500"></i>';
                 const catatanText = item.catatan ? item.catatan : '<span class="text-gray-600 italic">-</span>';
 
+                // Tabel Siswa
                 htmlSiswa += `
                     <tr class="border-b border-gray-700/50 hover:bg-gray-800/50 transition">
                         <td class="p-2 font-semibold">${item.nama}</td>
@@ -890,171 +929,35 @@
                     </tr>
                 `;
 
-                htmlWali += `
-                    <tr class="border-b border-gray-700/50 hover:bg-gray-800/50 transition">
-                        <td class="p-3 font-semibold text-white">${item.nama}</td>
-                        <td class="p-3 text-cyan-300 font-mono">${item.kelas}</td>
-                        <td class="p-3 text-gray-400 text-xs">${item.hari}, <br>${item.tanggal}</td>
-                        <td class="p-3 text-gray-400 font-mono">${item.waktu}</td>
-                        <td class="p-3">${badge}</td>
-                        <td class="p-3 text-xs text-gray-300 max-w-[150px] truncate" title="${item.catatan}">${catatanText}</td>
-                        <td class="p-3 text-center text-lg">${verifIcon}</td>
-                    </tr>
-                `;
+                // FILTERING TABEL WALI KELAS
+                if (window.activeWaliKelas === "" || item.kelas.toUpperCase() === window.activeWaliKelas) {
+                    countWali++;
+                    htmlWali += `
+                        <tr class="border-b border-gray-700/50 hover:bg-gray-800/50 transition">
+                            <td class="p-3 font-semibold text-white">${item.nama}</td>
+                            <td class="p-3 text-cyan-300 font-mono">${item.kelas}</td>
+                            <td class="p-3 text-gray-400 text-xs">${item.hari}, <br>${item.tanggal}</td>
+                            <td class="p-3 text-gray-400 font-mono">${item.waktu}</td>
+                            <td class="p-3">${badge}</td>
+                            <td class="p-3 text-xs text-gray-300 max-w-[150px] truncate" title="${item.catatan}">${catatanText}</td>
+                            <td class="p-3 text-center text-lg">${verifIcon}</td>
+                        </tr>
+                    `;
+                }
             });
 
             if (tbodySiswa) tbodySiswa.innerHTML = htmlSiswa;
-            if (tbodyWali) tbodyWali.innerHTML = htmlWali;
-        }
-
-        // --- UJIAN (SECURE ROOM & PUSH FIREBASE) ---
-        window.enterExamRoom = async function() {
-            if(!window.currentUser) { showModal("Tunggu", "Belum terkoneksi ke server.", "error"); return; }
             
-            const inputRoom = document.getElementById('room-code-input').value.toUpperCase();
-            const namaPeserta = document.getElementById('exam-nama-input').value.trim();
-            
-            if(!namaPeserta) {
-                showModal("Perhatian", "Silakan masukkan NAMA ANDA terlebih dahulu!", "error");
-                return;
-            }
-
-            if(inputRoom !== window.currentRoomCode) {
-                showModal('Akses Ditolak', `Kode Room Tidak Ditemukan! (Hint: Coba ketik ${window.currentRoomCode})`, 'error');
-                return;
-            }
-
-            // PUSH PESERTA UJIAN LIVE KE FIREBASE
-            try {
-                const liveRef = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'live_exams');
-                const docSnap = await window.fbAddDoc(liveRef, {
-                    nama: namaPeserta,
-                    room: window.currentRoomCode,
-                    status: 'Mengerjakan',
-                    timestamp: window.fbServerTimestamp()
-                });
-                currentLiveExamId = docSnap.id; // Simpan ID untuk mengubah status ke Selesai nanti
-            } catch(e) {
-                console.error("Gagal mengirim status live", e);
-            }
-
-            // Tampilkan Room Ujian
-            document.getElementById('exam-login-area').classList.add('hidden');
-            document.getElementById('exam-active-area').classList.remove('hidden');
-            
-            let soalHtml = `<div class="text-left w-full h-full text-white overflow-y-auto pr-2 custom-scrollbar">
-                <h4 class="font-bold text-lg mb-6 text-cyan-400 border-b border-gray-700 pb-2"><i class="fas fa-file-alt mr-2"></i> Lembar Soal Ujian</h4>`;
-            
-            if(bankSoal.length === 0) {
-                soalHtml += `<div class="flex flex-col items-center justify-center py-10"><i class="fas fa-exclamation-circle text-4xl text-gray-600 mb-4"></i><p class="text-center text-gray-400">Soal belum diterbitkan oleh guru.</p></div>`;
-            } else {
-                bankSoal.forEach((s, i) => {
-                    soalHtml += `<div class="mb-8 bg-gray-900/60 p-5 rounded-lg border border-gray-700 shadow-lg"><p class="mb-4 font-semibold text-gray-200 text-base leading-relaxed">${i+1}. ${s.pertanyaan}</p>`;
-                    if(s.tipe === 'PG' && s.opsi && s.opsi.length > 0) {
-                        soalHtml += `<div class="space-y-3 pl-2">`;
-                        s.opsi.forEach((opt, optIdx) => {
-                            soalHtml += `<label class="flex items-start cursor-pointer p-3 bg-gray-800 rounded-lg border border-gray-700 hover:border-cyan-500 transition group">
-                                <input type="radio" name="q${i}" class="mt-1 mr-3 w-4 h-4 text-cyan-600 bg-gray-900 border-gray-600 focus:ring-cyan-500">
-                                <span class="text-gray-300 group-hover:text-cyan-100">${opt}</span>
-                            </label>`;
-                        });
-                        soalHtml += `</div>`;
-                    } else {
-                        soalHtml += `<textarea rows="4" class="w-full bg-gray-800 border border-gray-600 text-white text-sm rounded-lg p-3 mt-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="Ketik jawaban esai Anda di sini..."></textarea>`;
-                    }
-                    soalHtml += `</div>`;
-                });
-                soalHtml += `<button onclick="kumpulkanUjian()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-4 px-4 rounded-lg transition shadow-lg mt-4"><i class="fas fa-paper-plane mr-2"></i> Kumpulkan Ujian</button>`;
-            }
-            soalHtml += `</div>`;
-
-            const outputArea = document.getElementById('exam-output-area');
-            outputArea.classList.remove('items-center', 'justify-center');
-            outputArea.classList.add('items-start');
-            outputArea.innerHTML = soalHtml;
-
-            startCountdown(examDuration * 60);
-        }
-
-        // PUSH HASIL UJIAN FIREBASE
-        window.kumpulkanUjian = async function() {
-            clearInterval(countdownInterval);
-            
-            const timerEl = document.getElementById('exam-timer');
-            if (timerEl) {
-                timerEl.textContent = "SELESAI";
-                timerEl.classList.remove('text-red-400', 'animate-pulse', 'text-red-600');
-                timerEl.classList.add('text-green-400');
-            }
-
-            const statusEl = document.getElementById('exam-status-badge');
-            if (statusEl) {
-                statusEl.innerHTML = '<i class="fas fa-check-circle mr-1"></i> SELESAI';
-            }
-            
-            const namaPeserta = document.getElementById('exam-nama-input').value || 'Peserta Anonim';
-
-            // PUSH KE DB
-            if(window.currentUser) {
-                try {
-                    // Update status Live menjadi Selesai
-                    if(currentLiveExamId) {
-                        const refLive = window.fbDoc(window.db, 'artifacts', window.appId, 'public', 'data', 'live_exams', currentLiveExamId);
-                        await window.fbUpdateDoc(refLive, { status: 'Selesai' });
-                    }
-                    
-                    // Simpan Nilai/Record Pengumpulan
-                    const refHasil = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'hasil_ujian');
-                    await window.fbAddDoc(refHasil, {
-                        nama: namaPeserta,
-                        room: window.currentRoomCode,
-                        waktuKumpul: new Date().toLocaleTimeString('id-ID'),
-                        timestamp: window.fbServerTimestamp()
-                    });
-                } catch (e) { console.error("Database Error:", e); }
-            }
-
-            const outputArea = document.getElementById('exam-output-area');
-            if (outputArea) {
-                outputArea.classList.remove('items-start');
-                outputArea.classList.add('items-center', 'justify-center');
-                outputArea.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-12 text-center fade-in">
-                        <div class="w-20 h-20 bg-green-900/50 rounded-full flex items-center justify-center mb-6 border-2 border-green-500 shadow-lg shadow-green-500/30">
-                            <i class="fas fa-check text-4xl text-green-400"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-white mb-2">Ujian Berhasil Dikumpulkan!</h3>
-                        <p class="text-gray-400 mb-8">Jawaban Anda telah direkam dan disimpan secara permanen di server Firebase Guru.</p>
-                        <button onclick="navigate('siswa-menu')" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded transition border border-gray-500">
-                            <i class="fas fa-sign-out-alt mr-2"></i> Keluar Ruangan Ujian
-                        </button>
-                    </div>
-                `;
-            }
-
-            showModal("Ujian Selesai!", "Kerja bagus! Seluruh jawaban Anda telah berhasil direkam ke Server Database Guru.", "success");
-        }
-
-        function startCountdown(seconds) {
-            clearInterval(countdownInterval);
-            const timerEl = document.getElementById('exam-timer');
-            
-            countdownInterval = setInterval(() => {
-                seconds--;
-                if(seconds < 0) {
-                    clearInterval(countdownInterval);
-                    timerEl.textContent = "WAKTU HABIS";
-                    timerEl.classList.remove('text-red-400');
-                    timerEl.classList.add('text-red-600', 'animate-pulse');
-                    return;
+            if (tbodyWali) {
+                if(countWali === 0) {
+                    tbodyWali.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-gray-500 italic">Belum ada absen dari murid kelas ${window.activeWaliKelas} hari ini...</td></tr>`;
+                } else {
+                    tbodyWali.innerHTML = htmlWali;
                 }
-                const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-                const s = (seconds % 60).toString().padStart(2, '0');
-                timerEl.textContent = `${m}:${s}`;
-            }, 1000);
+            }
         }
 
-        // --- FUNGSI GURU ---
+        // --- FUNGSI GURU UMUM ---
         window.loginTeacher = function() {
             const pwd = document.getElementById('teacher-pwd').value;
             if(pwd === 'admin123') {
@@ -1065,14 +968,101 @@
             }
         }
 
-        window.loginWaliKelas = function() {
+        // --- FUNGSI REGISTRASI AKUN WALI KELAS ---
+        window.registerWaliKelas = async function() {
+            if(!window.currentUser) { showModal("Tunggu", "Belum terkoneksi ke server Database.", "info"); return; }
+
+            const adminCode = document.getElementById('reg-admin-code').value.trim().toUpperCase();
+            const nama = document.getElementById('reg-nama').value.trim();
+            const kelas = document.getElementById('reg-kelas').value.trim().toUpperCase();
+            const pwd = document.getElementById('reg-pwd').value;
+
+            // KODE RAHASIA ADMIN (Mencegah Sembarang Orang Buat Akun)
+            if (adminCode !== "ADMIN123") {
+                showModal("Akses Ditolak", "Kode Rahasia Admin yang Anda masukkan SALAH.\nAnda tidak memiliki izin membuat akun.", "error");
+                return;
+            }
+
+            if (!nama || !kelas || !pwd) {
+                showModal("Data Tidak Lengkap", "Mohon lengkapi Nama, Kelas, dan Password Anda!", "error");
+                return;
+            }
+
+            try {
+                // Gunakan nama 'kelas' sebagai ID dokumen agar 1 kelas = 1 akun wali
+                const ref = window.fbDoc(window.db, 'artifacts', window.appId, 'public', 'data', 'wali_kelas_accounts', kelas);
+                
+                // Cek Apakah Kelas Tersebut Sudah Ada Walinya
+                const docSnap = await window.fbGetDoc(ref);
+                if (docSnap.exists()) {
+                    showModal("Gagal Mendaftar", `Kelas ${kelas} sudah memiliki akun Wali Kelas yang terdaftar di sistem.`, "error");
+                    return;
+                }
+
+                // Simpan ke Firestore
+                await window.fbSetDoc(ref, {
+                    nama: nama,
+                    kelas: kelas,
+                    password: pwd, // Disimpan mentah untuk simulasi
+                    timestamp: window.fbServerTimestamp()
+                });
+
+                showModal("Pembuatan Akun Berhasil!", `Selamat datang ${nama}!\n\nAkun Wali Kelas untuk ${kelas} berhasil dibuat.\nSistem akan mengembalikan Anda ke halaman Login.`, "success");
+                
+                // Reset form
+                document.getElementById('reg-admin-code').value = '';
+                document.getElementById('reg-nama').value = '';
+                document.getElementById('reg-kelas').value = '';
+                document.getElementById('reg-pwd').value = '';
+                
+                navigate('guru-walikelas-login');
+            } catch (e) {
+                showModal("Error Database", "Gagal mendaftarkan akun: " + e.message, "error");
+            }
+        }
+
+        // --- FUNGSI LOGIN WALI KELAS BACA DARI DATABASE ---
+        window.loginWaliKelas = async function() {
+            if(!window.currentUser) { showModal("Tunggu", "Belum terkoneksi ke server.", "info"); return; }
+
             const pwd = document.getElementById('wali-pwd').value;
-            if(pwd === 'wali123') {
-                navigate('guru-walikelas'); 
-                document.getElementById('wali-pwd').value = '';
-                if(window.renderTabelAbsensi) window.renderTabelAbsensi(); 
-            } else {
-                showModal("Akses Ditolak", "PIN Wali Kelas yang Anda masukkan salah!", "error");
+            const targetKelas = document.getElementById('wali-kelas-target').value.trim().toUpperCase();
+
+            if(!targetKelas || !pwd) {
+                showModal("Perhatian", "Mohon isi Kelas dan Password Anda dengan benar!", "error");
+                return;
+            }
+
+            try {
+                // Cari dokumen berdasarkan kelas
+                const ref = window.fbDoc(window.db, 'artifacts', window.appId, 'public', 'data', 'wali_kelas_accounts', targetKelas);
+                const docSnap = await window.fbGetDoc(ref);
+
+                if (docSnap.exists()) {
+                    const dataAkun = docSnap.data();
+                    
+                    // Verifikasi Password
+                    if (dataAkun.password === pwd) {
+                        window.activeWaliKelas = targetKelas;
+                        window.activeWaliNama = dataAkun.nama;
+                        
+                        // Update UI Dashboard sesuai kelas guru yang login
+                        document.getElementById('display-active-kelas').innerText = `- ${targetKelas} (${dataAkun.nama})`;
+                        document.getElementById('manual-kelas').value = targetKelas; 
+                        
+                        navigate('guru-walikelas'); 
+                        document.getElementById('wali-pwd').value = '';
+                        document.getElementById('wali-kelas-target').value = '';
+                        
+                        if(window.renderTabelAbsensi) window.renderTabelAbsensi(); 
+                    } else {
+                        showModal("Akses Ditolak", "Password yang Anda masukkan salah!", "error");
+                    }
+                } else {
+                    showModal("Akun Tidak Ditemukan", `Akun Wali Kelas untuk kelas ${targetKelas} BELUM TERDAFTAR di sistem.\n\nSilakan klik tombol "Buat Akun Wali Kelas" di bawah.`, "error");
+                }
+            } catch (e) {
+                showModal("Error", "Gagal login: " + e.message, "error");
             }
         }
 
