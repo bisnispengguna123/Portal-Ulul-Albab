@@ -210,8 +210,10 @@
                     
                     <div id="exam-login-area" class="mt-6 relative z-10">
                         <label class="block mb-2 text-sm font-medium text-gray-300">Akses Secure Room</label>
-                        <div class="flex space-x-2">
-                            <input type="text" id="room-code-input" placeholder="Ketik Kode ROOM Ujian" class="flex-1 bg-gray-900 border border-gray-600 text-white text-lg rounded focus:ring-red-500 focus:border-red-500 block w-full p-3 font-mono tracking-widest text-center uppercase">
+                        <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                            <!-- Field Nama Murid Ditambahkan Agar Tercatat di Firebase -->
+                            <input type="text" id="exam-nama-input" placeholder="Nama Anda" class="w-full md:w-1/3 bg-gray-900 border border-gray-600 text-white text-sm rounded focus:ring-red-500 focus:border-red-500 block p-3">
+                            <input type="text" id="room-code-input" placeholder="Ketik Kode ROOM Ujian" class="flex-1 bg-gray-900 border border-gray-600 text-white text-lg rounded focus:ring-red-500 focus:border-red-500 block p-3 font-mono tracking-widest text-center uppercase">
                             <button onclick="enterExamRoom()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded transition shadow-lg shadow-red-500/30">
                                 MASUK <i class="fas fa-sign-in-alt ml-1"></i>
                             </button>
@@ -438,7 +440,7 @@
                               <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                             </span>
                         </div>
-                        <div class="overflow-y-auto flex-1 bg-gray-900 rounded border border-gray-700 p-2">
+                        <div class="overflow-y-auto flex-1 bg-gray-900 rounded border border-gray-700 p-2 custom-scrollbar">
                             <table class="w-full text-left text-xs">
                                 <thead>
                                     <tr class="text-gray-400 border-b border-gray-800">
@@ -541,16 +543,12 @@
 
                     <!-- Database Links -->
                     <div class="glass-panel p-6 rounded-xl border border-gray-700">
-                        <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-database text-orange-400 mr-2"></i> 📊 Database Server</h3>
+                        <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-database text-orange-400 mr-2"></i> 📊 Data Terkirim ke Server</h3>
                         <p class="text-xs text-gray-400 mb-4">Project ID: <span class="text-white font-mono">portal-ujian-online</span></p>
                         <div class="space-y-2">
-                            <button onclick="showModal('Firebase Console', 'Mengalihkan ke Firebase Console untuk merekap Data Absensi Bulanan... (Simulasi Akses Database)', 'info')" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-600 text-left text-sm text-white py-2 px-4 rounded transition flex justify-between items-center">
-                                <span><i class="fas fa-table text-blue-400 mr-2"></i> Rekap Absensi Bulanan</span>
-                                <i class="fas fa-external-link-alt text-gray-500"></i>
-                            </button>
-                            <button onclick="showModal('Firebase Console', 'Mengalihkan ke Firebase Console untuk mengunduh Rekap Hasil Nilai Ujian... (Simulasi Akses Database)', 'info')" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-600 text-left text-sm text-white py-2 px-4 rounded transition flex justify-between items-center">
-                                <span><i class="fas fa-chart-bar text-green-400 mr-2"></i> Rekap Hasil Nilai</span>
-                                <i class="fas fa-external-link-alt text-gray-500"></i>
+                            <button onclick="showModal('Firebase Data Terekam!', 'Semua aksi absen yang dilakukan murid hari ini sudah dipush secara langsung ke koleksi Firestore: \n[ public/data/absensi ] \n\nSilakan buka Firebase Console Anda untuk melihat JSON raw-nya.', 'info')" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-600 text-left text-sm text-white py-2 px-4 rounded transition flex justify-between items-center">
+                                <span><i class="fas fa-table text-blue-400 mr-2"></i> Info Sinkronisasi DB</span>
+                                <i class="fas fa-cloud-upload-alt text-gray-500"></i>
                             </button>
                         </div>
                     </div>
@@ -573,7 +571,7 @@
                             </select>
                             <textarea id="manual-catatan" rows="2" placeholder="Tulis catatan (misal: Ketahuan di kantin, dll)..." class="w-full bg-gray-900 border border-gray-600 text-white text-sm rounded focus:ring-red-500 focus:border-red-500 block p-2 resize-none"></textarea>
                             <button onclick="submitAbsenManual()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition text-sm shadow-lg shadow-red-500/30">
-                                <i class="fas fa-save mr-1"></i> Simpan Catatan
+                                <i class="fas fa-save mr-1"></i> Simpan ke Server
                             </button>
                         </div>
                     </div>
@@ -584,7 +582,7 @@
                 <div class="lg:col-span-2 glass-panel p-6 rounded-xl border-t-4 border-teal-500 flex flex-col h-full">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-bold text-white"><i class="fas fa-users-viewfinder text-teal-400 mr-2"></i> 📡 Live Monitor Absensi Kelas</h3>
-                        <button onclick="renderTabelAbsensi()" class="text-xs bg-gray-800 border border-gray-600 hover:bg-gray-700 text-white py-1 px-3 rounded transition"><i class="fas fa-sync-alt mr-1"></i> Refresh</button>
+                        <span class="text-xs bg-gray-800 border border-gray-600 text-green-400 py-1 px-3 rounded"><i class="fas fa-circle-notch fa-spin mr-1"></i> Terhubung ke Firebase</span>
                     </div>
                     <div class="overflow-y-auto flex-1 bg-gray-900 rounded-lg border border-gray-700 p-2 custom-scrollbar">
                         <table class="w-full text-left text-sm">
@@ -601,7 +599,7 @@
                             </thead>
                             <tbody id="walikelas-absen-body">
                                 <tr>
-                                    <td colspan="7" class="text-center py-8 text-gray-500 italic">Belum ada data absensi murid yang masuk hari ini...</td>
+                                    <td colspan="7" class="text-center py-8 text-gray-500 italic">Memuat data dari server Firebase...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -623,9 +621,9 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Konfigurasi Firebase Sesuai Permintaan User
+        // Konfigurasi Firebase Anda
         const firebaseConfig = {
             apiKey: "AIzaSyClSsc-43TVFzS6SYendhqZscgtMqHKs4E",
             authDomain: "portal-ujian-online.firebaseapp.com",
@@ -639,41 +637,87 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = 'portal-ulul-albab-v1'; // Namespace identifier for safe DB structure
+        const appId = 'portal-ulul-albab-v1'; 
 
-        // Auth Logic
+        // Ekspor ke window agar fungsi UI biasa bisa mengakses DB
+        window.db = db;
+        window.appId = appId;
+        window.fbAddDoc = addDoc;
+        window.fbCollection = collection;
+        window.fbServerTimestamp = serverTimestamp;
+        window.fbDoc = doc;
+        window.fbUpdateDoc = updateDoc;
+
+        // Auth & Realtime Setup
         signInAnonymously(auth).catch((error) => console.error("Firebase Auth Error:", error));
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log("Sistem terhubung ke Database (Mode Anonymous). UID:", user.uid);
-                // Setup Realtime Listeners jika diperlukan di sini
+                window.currentUser = user;
+                console.log("Firebase Terhubung! UID:", user.uid);
+                
+                // --- MENDENGARKAN DATA ABSENSI DARI FIREBASE ---
+                const absensiRef = collection(db, 'artifacts', appId, 'public', 'data', 'absensi');
+                onSnapshot(absensiRef, (snapshot) => {
+                    const temp = [];
+                    snapshot.forEach(doc => {
+                        temp.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    // Urutkan berdasarkan waktu input terbaru
+                    temp.sort((a, b) => {
+                        const timeA = a.timestamp?.toMillis ? a.timestamp.toMillis() : Date.now();
+                        const timeB = b.timestamp?.toMillis ? b.timestamp.toMillis() : Date.now();
+                        return timeB - timeA; 
+                    });
+                    
+                    window.dataAbsensi = temp; 
+                    if(window.renderTabelAbsensi) window.renderTabelAbsensi();
+                }, (err) => console.error("Error mengambil Absen:", err));
+
+                // --- MENDENGARKAN PESERTA UJIAN LIVE DARI FIREBASE ---
+                const liveRef = collection(db, 'artifacts', appId, 'public', 'data', 'live_exams');
+                onSnapshot(liveRef, (snapshot) => {
+                    const tbody = document.getElementById('live-monitor-body');
+                    if(!tbody) return;
+                    let html = '';
+                    let count = 0;
+                    
+                    snapshot.forEach(d => {
+                        const data = d.data();
+                        if(data.room === window.currentRoomCode) { // Hanya tampilkan yang sesuai room
+                            count++;
+                            let statusBadge = data.status === 'Selesai' 
+                                ? '<span class="text-green-400"><i class="fas fa-check"></i> Selesai</span>'
+                                : '<span class="text-yellow-400"><i class="fas fa-spinner fa-spin"></i> Mengerjakan</span>';
+                            html += `<tr class="border-b border-gray-800"><td class="py-2 text-white pl-2">${data.nama}</td><td class="py-2">${statusBadge}</td><td class="py-2 text-right pr-2">${data.status === 'Selesai' ? '-' : 'Live'}</td></tr>`;
+                        }
+                    });
+                    
+                    if(count === 0) html = '<tr><td colspan="3" class="text-center py-4 text-gray-500 italic">Belum ada peserta di room ini...</td></tr>';
+                    tbody.innerHTML = html;
+                }, (err) => console.error("Error mengambil Live Exams:", err));
             }
         });
-
-        // Menyimpan instance DB ke global object agar fungsi UI bisa akses (simulasi)
-        window.appDB = db;
-        window.appId = appId;
     </script>
 
     <!-- UI Logic & API Handlers -->
     <script>
-        // Data State Global (Simulasi untuk UI sebelum DB sinkron penuh)
-        let activeTeacherToken = "";
-        let currentRoomCode = "FIS10A";
+        // State Variabel Lokal
+        window.activeTeacherToken = "";
+        window.currentRoomCode = "FIS10A";
         let examDuration = 60; // menit
         let countdownInterval;
-        let bankSoal = []; // State untuk menampung seluruh soal (Manual + AI)
-        let dataAbsensi = []; // State khusus untuk absensi murid
+        let bankSoal = []; 
+        let currentLiveExamId = null; // Menyimpan ID dokumen Firestore siswa ujian
 
-        // Navigation
         function navigate(viewId) {
             document.querySelectorAll('main > div[id^="view-"]').forEach(el => el.classList.add('hidden-view'));
             document.getElementById(`view-${viewId}`).classList.remove('hidden-view');
         }
 
         // --- SISTEM POPUP MODAL ---
-        function showModal(title, message, type='success') {
+        window.showModal = function(title, message, type='success') {
             const modal = document.getElementById('custom-modal');
             const content = document.getElementById('custom-modal-content');
 
@@ -708,7 +752,7 @@
             }, 10);
         }
 
-        function closeModal() {
+        window.closeModal = function() {
             const modal = document.getElementById('custom-modal');
             const content = document.getElementById('custom-modal-content');
             content.classList.remove('scale-100', 'opacity-100');
@@ -719,10 +763,11 @@
             }, 300);
         }
 
-        // --- FUNGSI SISWA ---
+        // --- FUNGSI SISWA (PUSH KE FIREBASE) ---
 
-        // Absensi
-        function submitAbsen() {
+        window.submitAbsen = async function() {
+            if(!window.currentUser) { showModal("Tunggu Sebentar", "Sedang menghubungkan ke server Firebase...", "info"); return; }
+
             const name = document.getElementById('student-name').value;
             const kelas = document.getElementById('student-class-input').value;
             const statusAbsen = document.getElementById('student-status').value;
@@ -733,43 +778,43 @@
                 return;
             }
 
-            if (activeTeacherToken && token !== activeTeacherToken) {
+            if (window.activeTeacherToken && token !== window.activeTeacherToken) {
                 showModal("Token Invalid", "Kode token yang Anda masukkan salah atau belum diatur oleh Guru.", "error");
                 return;
             }
 
-            // Kumpulkan Data Waktu
             const dateObj = new Date();
-            const hari = dateObj.toLocaleDateString('id-ID', {weekday: 'long'});
-            const tanggal = dateObj.toLocaleDateString('id-ID');
-            const waktu = dateObj.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
-            
-            // Masukkan ke State Global
-            dataAbsensi.unshift({
+            const payload = {
                 nama: name,
                 kelas: kelas,
-                hari: hari,
-                tanggal: tanggal,
-                waktu: waktu,
+                hari: dateObj.toLocaleDateString('id-ID', {weekday: 'long'}),
+                tanggal: dateObj.toLocaleDateString('id-ID'),
+                waktu: dateObj.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}),
                 status: statusAbsen,
-                catatan: "", // Kosong jika dari murid
-                isValid: true
-            });
+                catatan: "", 
+                isValid: true,
+                timestamp: window.fbServerTimestamp()
+            };
 
-            // Sinkronisasi Tabel
-            renderTabelAbsensi();
+            try {
+                // KIRIM KE FIREBASE
+                const ref = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'absensi');
+                await window.fbAddDoc(ref, payload);
 
-            // Munculkan Pop Up Sukses Absen
-            showModal("Absensi Berhasil!", `Terima kasih ${name}.\nData kehadiran Anda (${statusAbsen}) telah terekam di sistem Wali Kelas.`, "success");
+                showModal("Absensi Berhasil!", `Terima kasih ${name}.\nData kehadiran Anda (${statusAbsen}) berhasil direkam di Server Firebase!`, "success");
 
-            // Kosongkan input
-            document.getElementById('student-name').value = '';
-            document.getElementById('student-class-input').value = '';
-            document.getElementById('token-input').value = '';
+                document.getElementById('student-name').value = '';
+                document.getElementById('student-class-input').value = '';
+                document.getElementById('token-input').value = '';
+            } catch(e) {
+                showModal("Database Error", "Gagal mengirim data ke server: " + e.message, "error");
+            }
         }
 
-        // --- FUNGSI BARU: INPUT ABSEN MANUAL GURU ---
-        function submitAbsenManual() {
+        // --- FUNGSI BARU: INPUT ABSEN MANUAL GURU (PUSH KE FIREBASE) ---
+        window.submitAbsenManual = async function() {
+            if(!window.currentUser) return;
+
             const nama = document.getElementById('manual-nama').value.trim();
             const kelas = document.getElementById('manual-kelas').value.trim();
             const status = document.getElementById('manual-status').value;
@@ -781,46 +826,50 @@
             }
 
             const dateObj = new Date();
-            const hari = dateObj.toLocaleDateString('id-ID', {weekday: 'long'});
-            const tanggal = dateObj.toLocaleDateString('id-ID');
-            const waktu = dateObj.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
-
-            dataAbsensi.unshift({
+            const payload = {
                 nama: nama,
                 kelas: kelas,
-                hari: hari,
-                tanggal: tanggal,
-                waktu: waktu,
+                hari: dateObj.toLocaleDateString('id-ID', {weekday: 'long'}),
+                tanggal: dateObj.toLocaleDateString('id-ID'),
+                waktu: dateObj.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}),
                 status: status,
                 catatan: catatan,
-                isValid: true // Tervalidasi karena diinput langsung oleh guru
-            });
+                isValid: true,
+                timestamp: window.fbServerTimestamp()
+            };
 
-            renderTabelAbsensi();
+            try {
+                // KIRIM KE FIREBASE
+                const ref = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'absensi');
+                await window.fbAddDoc(ref, payload);
 
-            showModal("Catatan Tersimpan", `Data kehadiran manual untuk ${nama} (${status}) berhasil ditambahkan ke rekapitulasi.`, "success");
+                showModal("Catatan Tersimpan", `Data kehadiran manual untuk ${nama} (${status}) berhasil ditambahkan ke Firebase.`, "success");
 
-            // Kosongkan form manual
-            document.getElementById('manual-nama').value = '';
-            document.getElementById('manual-kelas').value = '';
-            document.getElementById('manual-catatan').value = '';
+                document.getElementById('manual-nama').value = '';
+                document.getElementById('manual-kelas').value = '';
+                document.getElementById('manual-catatan').value = '';
+            } catch(e) {
+                showModal("Database Error", "Gagal menyimpan: " + e.message, "error");
+            }
         }
 
-        // Render Sinkronisasi Data Absensi (Siswa & Wali Kelas)
-        function renderTabelAbsensi() {
+        // Render Data Absensi dari variabel global (yang diupdate oleh onSnapshot)
+        window.renderTabelAbsensi = function() {
             const tbodySiswa = document.getElementById('absen-table-body');
             const tbodyWali = document.getElementById('walikelas-absen-body');
             
             let htmlSiswa = '';
             let htmlWali = '';
+            
+            const listData = window.dataAbsensi || [];
 
-            if (dataAbsensi.length === 0) {
+            if (listData.length === 0) {
                 if(tbodySiswa) tbodySiswa.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-500 italic">Belum ada absen masuk...</td></tr>';
                 if(tbodyWali) tbodyWali.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-gray-500 italic">Belum ada data absensi murid yang masuk hari ini...</td></tr>';
                 return;
             }
 
-            dataAbsensi.forEach(item => {
+            listData.forEach(item => {
                 let badge = '';
                 if(item.status === 'Hadir') badge = '<span class="px-2 py-1 rounded-full bg-green-900/50 text-green-400 text-xs font-bold border border-green-700">Hadir</span>';
                 else if(item.status === 'Izin') badge = '<span class="px-2 py-1 rounded-full bg-yellow-900/50 text-yellow-400 text-xs font-bold border border-yellow-700">Izin</span>';
@@ -858,20 +907,41 @@
             if (tbodyWali) tbodyWali.innerHTML = htmlWali;
         }
 
-        // Ujian (Secure Room)
-        function enterExamRoom() {
-            const inputRoom = document.getElementById('room-code-input').value.toUpperCase();
+        // --- UJIAN (SECURE ROOM & PUSH FIREBASE) ---
+        window.enterExamRoom = async function() {
+            if(!window.currentUser) { showModal("Tunggu", "Belum terkoneksi ke server.", "error"); return; }
             
-            if(inputRoom !== currentRoomCode) {
-                showModal('Akses Ditolak', `Kode Room Tidak Ditemukan! (Hint: Coba ketik ${currentRoomCode})`, 'error');
+            const inputRoom = document.getElementById('room-code-input').value.toUpperCase();
+            const namaPeserta = document.getElementById('exam-nama-input').value.trim();
+            
+            if(!namaPeserta) {
+                showModal("Perhatian", "Silakan masukkan NAMA ANDA terlebih dahulu!", "error");
                 return;
+            }
+
+            if(inputRoom !== window.currentRoomCode) {
+                showModal('Akses Ditolak', `Kode Room Tidak Ditemukan! (Hint: Coba ketik ${window.currentRoomCode})`, 'error');
+                return;
+            }
+
+            // PUSH PESERTA UJIAN LIVE KE FIREBASE
+            try {
+                const liveRef = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'live_exams');
+                const docSnap = await window.fbAddDoc(liveRef, {
+                    nama: namaPeserta,
+                    room: window.currentRoomCode,
+                    status: 'Mengerjakan',
+                    timestamp: window.fbServerTimestamp()
+                });
+                currentLiveExamId = docSnap.id; // Simpan ID untuk mengubah status ke Selesai nanti
+            } catch(e) {
+                console.error("Gagal mengirim status live", e);
             }
 
             // Tampilkan Room Ujian
             document.getElementById('exam-login-area').classList.add('hidden');
             document.getElementById('exam-active-area').classList.remove('hidden');
             
-            // Generate Lembar Ujian Asli Berdasarkan Bank Soal
             let soalHtml = `<div class="text-left w-full h-full text-white overflow-y-auto pr-2 custom-scrollbar">
                 <h4 class="font-bold text-lg mb-6 text-cyan-400 border-b border-gray-700 pb-2"><i class="fas fa-file-alt mr-2"></i> Lembar Soal Ujian</h4>`;
             
@@ -880,7 +950,6 @@
             } else {
                 bankSoal.forEach((s, i) => {
                     soalHtml += `<div class="mb-8 bg-gray-900/60 p-5 rounded-lg border border-gray-700 shadow-lg"><p class="mb-4 font-semibold text-gray-200 text-base leading-relaxed">${i+1}. ${s.pertanyaan}</p>`;
-                    
                     if(s.tipe === 'PG' && s.opsi && s.opsi.length > 0) {
                         soalHtml += `<div class="space-y-3 pl-2">`;
                         s.opsi.forEach((opt, optIdx) => {
@@ -907,12 +976,10 @@
             startCountdown(examDuration * 60);
         }
 
-        // Fungsi Baru untuk Mengumpulkan Ujian
-        function kumpulkanUjian() {
-            // Hentikan Waktu Ujian
+        // PUSH HASIL UJIAN FIREBASE
+        window.kumpulkanUjian = async function() {
             clearInterval(countdownInterval);
             
-            // Ubah Status Timer
             const timerEl = document.getElementById('exam-timer');
             if (timerEl) {
                 timerEl.textContent = "SELESAI";
@@ -920,25 +987,44 @@
                 timerEl.classList.add('text-green-400');
             }
 
-            // Ubah Status Badge Live
             const statusEl = document.getElementById('exam-status-badge');
             if (statusEl) {
                 statusEl.innerHTML = '<i class="fas fa-check-circle mr-1"></i> SELESAI';
             }
             
-            // Ganti Area Soal dengan Layar Sukses
+            const namaPeserta = document.getElementById('exam-nama-input').value || 'Peserta Anonim';
+
+            // PUSH KE DB
+            if(window.currentUser) {
+                try {
+                    // Update status Live menjadi Selesai
+                    if(currentLiveExamId) {
+                        const refLive = window.fbDoc(window.db, 'artifacts', window.appId, 'public', 'data', 'live_exams', currentLiveExamId);
+                        await window.fbUpdateDoc(refLive, { status: 'Selesai' });
+                    }
+                    
+                    // Simpan Nilai/Record Pengumpulan
+                    const refHasil = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'hasil_ujian');
+                    await window.fbAddDoc(refHasil, {
+                        nama: namaPeserta,
+                        room: window.currentRoomCode,
+                        waktuKumpul: new Date().toLocaleTimeString('id-ID'),
+                        timestamp: window.fbServerTimestamp()
+                    });
+                } catch (e) { console.error("Database Error:", e); }
+            }
+
             const outputArea = document.getElementById('exam-output-area');
             if (outputArea) {
                 outputArea.classList.remove('items-start');
                 outputArea.classList.add('items-center', 'justify-center');
-                
                 outputArea.innerHTML = `
                     <div class="flex flex-col items-center justify-center py-12 text-center fade-in">
                         <div class="w-20 h-20 bg-green-900/50 rounded-full flex items-center justify-center mb-6 border-2 border-green-500 shadow-lg shadow-green-500/30">
                             <i class="fas fa-check text-4xl text-green-400"></i>
                         </div>
                         <h3 class="text-2xl font-bold text-white mb-2">Ujian Berhasil Dikumpulkan!</h3>
-                        <p class="text-gray-400 mb-8">Jawaban Anda telah direkam dan disimpan di dalam server.</p>
+                        <p class="text-gray-400 mb-8">Jawaban Anda telah direkam dan disimpan secara permanen di server Firebase Guru.</p>
                         <button onclick="navigate('siswa-menu')" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded transition border border-gray-500">
                             <i class="fas fa-sign-out-alt mr-2"></i> Keluar Ruangan Ujian
                         </button>
@@ -946,8 +1032,7 @@
                 `;
             }
 
-            // Tampilkan Custom Pop Up 
-            showModal("Ujian Selesai!", "Kerja bagus! Seluruh jawaban Anda telah berhasil dikirimkan ke Guru.", "success");
+            showModal("Ujian Selesai!", "Kerja bagus! Seluruh jawaban Anda telah berhasil direkam ke Server Database Guru.", "success");
         }
 
         function startCountdown(seconds) {
@@ -970,38 +1055,37 @@
         }
 
         // --- FUNGSI GURU ---
-        function loginTeacher() {
+        window.loginTeacher = function() {
             const pwd = document.getElementById('teacher-pwd').value;
             if(pwd === 'admin123') {
-                navigate('guru-menu'); // Dirubah navigasinya ke Menu Guru
+                navigate('guru-menu'); 
                 document.getElementById('teacher-pwd').value = '';
             } else {
                 showModal("Akses Ditolak", "Password Guru yang Anda masukkan salah!", "error");
             }
         }
 
-        function loginWaliKelas() {
+        window.loginWaliKelas = function() {
             const pwd = document.getElementById('wali-pwd').value;
             if(pwd === 'wali123') {
                 navigate('guru-walikelas'); 
                 document.getElementById('wali-pwd').value = '';
-                renderTabelAbsensi(); // Panggil render tabel absensi
+                if(window.renderTabelAbsensi) window.renderTabelAbsensi(); 
             } else {
                 showModal("Akses Ditolak", "PIN Wali Kelas yang Anda masukkan salah!", "error");
             }
         }
 
-        function setToken() {
+        window.setToken = function() {
             const input = document.getElementById('admin-token').value.toUpperCase();
             if(input) {
-                activeTeacherToken = input;
-                document.getElementById('active-token-display').textContent = activeTeacherToken;
-                showModal("Token Diperbarui", `Token kehadiran berhasil diset menjadi: ${activeTeacherToken}\nMurid sudah dapat menggunakan token ini untuk absen.`, "success");
+                window.activeTeacherToken = input;
+                document.getElementById('active-token-display').textContent = window.activeTeacherToken;
+                showModal("Token Diperbarui", `Token kehadiran berhasil diset menjadi: ${window.activeTeacherToken}\nMurid sudah dapat menggunakan token ini untuk absen.`, "success");
             }
         }
 
-        // Fitur Update Mading
-        function updateMading() {
+        window.updateMading = function() {
             const val = document.getElementById('input-mading').value;
             if(!val.trim()) {
                 showModal("Error", "Pengumuman tidak boleh kosong!", "error");
@@ -1016,8 +1100,7 @@
             showModal("Berhasil", "Mading Digital berhasil diperbarui!", "success");
         }
 
-        // Toggle Opsi PG di Manual Input
-        function toggleOpsiPG() {
+        window.toggleOpsiPG = function() {
             const jenis = document.getElementById('manual-jenis').value;
             const opsiDiv = document.getElementById('manual-opsi-pg');
             const kunciPgDiv = document.getElementById('kunci-pg-div');
@@ -1034,8 +1117,7 @@
             }
         }
 
-        // Render Daftar Soal ke Grid Pratinjau
-        function renderDaftarSoal() {
+        window.renderDaftarSoal = function() {
             const container = document.getElementById('daftar-soal-container');
             document.getElementById('total-soal-badge').innerText = bankSoal.length;
 
@@ -1053,7 +1135,6 @@
                     opsiHtml += '</ul>';
                 }
 
-                // Tambahan Tampilan Kunci Jawaban
                 let kunciHtml = `<div class="mt-3 text-xs font-bold text-green-400 bg-green-900/20 p-2 rounded border border-green-800"><i class="fas fa-check-circle mr-1"></i> Kunci: ${soal.jawabanBenar || 'Tidak diatur'}</div>`;
 
                 html += `
@@ -1071,20 +1152,16 @@
                 `;
             });
             container.innerHTML = html;
-            
-            // Auto scroll ke bawah tiap ada soal baru
             container.scrollTop = container.scrollHeight;
         }
 
-        // Fungsi Hapus Soal Individu
-        function hapusSoal(index) {
+        window.hapusSoal = function(index) {
             bankSoal.splice(index, 1);
             renderDaftarSoal();
             showModal("Terhapus", "Soal berhasil dihapus dari Bank Soal.", "success");
         }
 
-        // Fungsi Bersihkan Semua Soal
-        function bersihkanSemuaSoal() {
+        window.bersihkanSemuaSoal = function() {
             if(bankSoal.length > 0) {
                 bankSoal = [];
                 renderDaftarSoal();
@@ -1092,8 +1169,7 @@
             }
         }
 
-        // Tambah Soal Manual
-        function tambahSoalManual() {
+        window.tambahSoalManual = function() {
             const jenis = document.getElementById('manual-jenis').value;
             const pertanyaan = document.getElementById('manual-pertanyaan').value;
             
@@ -1125,7 +1201,6 @@
 
             renderDaftarSoal();
             
-            // Reset input
             document.getElementById('manual-pertanyaan').value = '';
             if(jenis === 'PG') {
                 document.getElementById('opt-a').value = '';
@@ -1138,8 +1213,7 @@
             showModal("Sukses", `Soal berhasil ditambahkan ke bank soal.`, "success");
         }
 
-        // Helper Buka Room
-        function setLiveMonitorWaiting(room) {
+        window.setLiveMonitorWaiting = function(room) {
             document.getElementById('live-monitor-body').innerHTML = `
                 <tr class="border-b border-gray-800 bg-green-900/20">
                     <td class="py-2 text-white font-semibold pl-2">-- Menunggu Siswa Join (Room ${room}) --</td>
@@ -1148,8 +1222,7 @@
             `;
         }
 
-        // Terbitkan Ujian (Validasi Global)
-        function terbitkanUjian() {
+        window.terbitkanUjian = function() {
             const guru = document.getElementById('setup-guru').value.trim();
             const mapel = document.getElementById('setup-mapel').value.trim();
             const kelas = document.getElementById('setup-kelas').value.trim();
@@ -1161,15 +1234,14 @@
                 return;
             }
 
-            currentRoomCode = room;
+            window.currentRoomCode = room;
             examDuration = parseInt(durasi);
             
             showModal("Ujian Diterbitkan!", `Guru: ${guru}\nMapel: ${mapel}\nKelas: ${kelas}\nRoom: ${room}\nDurasi: ${durasi} Menit\n\nSiswa sekarang dapat masuk menggunakan Kode Room di atas.`, "info");
             setLiveMonitorWaiting(room);
         }
 
-        // Buka Room Ujian Manual
-        function bukaRoomUjian() {
+        window.bukaRoomUjian = function() {
             const room = document.getElementById('setup-room').value.toUpperCase();
             const durasi = document.getElementById('setup-durasi').value;
             const guru = document.getElementById('setup-guru').value || 'Guru Pengampu';
@@ -1181,19 +1253,17 @@
                 return;
             }
 
-            currentRoomCode = room;
+            window.currentRoomCode = room;
             examDuration = parseInt(durasi);
             
             showModal("Room DIBUKA!", `Room ${room} aktif.\nMata Pelajaran: ${mapel} (${kelas})\nOleh: ${guru}\nDurasi: ${durasi} menit.`, "info");
             setLiveMonitorWaiting(room);
         }
 
-        // API Groq Integration
-        async function generateAIQuestions() {
+        window.generateAIQuestions = async function() {
             const btn = document.getElementById('btn-generate');
             const resultBox = document.getElementById('ai-result');
             
-            // Kumpulkan Parameter Global Setup dan AI Parameter
             const p = {
                 guru: document.getElementById('setup-guru').value || 'Guru AI',
                 mapel: document.getElementById('ai-mapel-spesifik').value || 'Umum',
@@ -1262,7 +1332,7 @@ PENTING:
                 bankSoal = bankSoal.concat(soalAI);
                 renderDaftarSoal(); 
 
-                resultBox.innerHTML = `<span class="text-green-400 font-bold"><i class="fas fa-check"></i> Sukses:</span> ${soalAI.length} Soal AI (${p.mapel} - ${p.materi}) berhasil ditambahkan ke Pratinjau. Anda dapat mengedit atau menghapusnya di tabel Bank Soal.`;
+                resultBox.innerHTML = `<span class="text-green-400 font-bold"><i class="fas fa-check"></i> Sukses:</span> ${soalAI.length} Soal AI (${p.mapel} - ${p.materi}) berhasil ditambahkan ke Pratinjau.`;
                 resultBox.classList.remove('hidden');
 
             } catch (error) {
@@ -1299,10 +1369,6 @@ PENTING:
                 btn.classList.remove('opacity-70', 'cursor-not-allowed');
             }
         }
-
-        // Initialize display dummy token
-        document.getElementById('active-token-display').textContent = activeTeacherToken || "- Belum Diset -";
-
     </script>
 </body>
 </html>
