@@ -496,6 +496,33 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- KOLOM BAWAH FULL-WIDTH: TABEL HASIL & KOREKSI UJIAN (BARU) -->
+                <div class="lg:col-span-3">
+                    <div class="glass-panel p-6 rounded-xl border border-green-500 relative">
+                        <div class="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-xl">PAPAN KOREKSI</div>
+                        <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-poll text-green-400 mr-2"></i> 📈 Hasil & Lembar Jawaban Siswa <span id="label-room-hasil" class="text-green-300 font-mono ml-2 text-sm">(Room: -)</span></h3>
+                        
+                        <div class="overflow-x-auto bg-gray-900 rounded-lg border border-gray-700">
+                            <table class="w-full text-left text-sm whitespace-nowrap">
+                                <thead>
+                                    <tr class="text-gray-400 border-b border-gray-700 bg-gray-800">
+                                        <th class="p-4">Nama Peserta</th>
+                                        <th class="p-4">Waktu Pengumpulan</th>
+                                        <th class="p-4">Skor PG Otomatis</th>
+                                        <th class="p-4 text-center">Tindakan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hasil-ujian-body">
+                                    <tr>
+                                        <td colspan="4" class="text-center py-8 text-gray-500 italic">Belum ada data hasil ujian masuk untuk room ini.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-3"><i class="fas fa-info-circle text-cyan-400"></i> Catatan: Nilai Skor PG dihitung otomatis berdasarkan persentase jawaban benar.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -563,7 +590,7 @@
         <div id="view-guru-walikelas" class="hidden-view space-y-8">
             <div class="flex justify-between items-end border-b-2 border-teal-500 pb-2">
                 <div>
-                    <button onclick="navigate('home')" class="text-gray-400 hover:text-white mb-2 text-sm"><i class="fas fa-arrow-left mr-2"></i>Kembali</button>
+                    <button onclick="logoutWaliKelas()" class="text-gray-400 hover:text-white hover:text-red-400 mb-2 text-sm transition"><i class="fas fa-sign-out-alt mr-2"></i>Keluar (Logout)</button>
                     <!-- JUDUL KELAS DINAMIS -->
                     <h2 class="text-3xl font-bold text-white"><i class="fas fa-users text-teal-400 mr-3"></i>DASHBOARD WALI KELAS <span id="display-active-kelas" class="text-teal-300"></span></h2>
                 </div>
@@ -809,6 +836,25 @@
                     if(count === 0) html = '<tr><td colspan="3" class="text-center py-4 text-gray-500 italic">Belum ada peserta di room ini...</td></tr>';
                     tbody.innerHTML = html;
                 }, (err) => console.error("Error mengambil Live Exams:", err));
+
+                // --- MENDENGARKAN DATA HASIL UJIAN (BARU) ---
+                const hasilRef = collection(db, 'artifacts', appId, 'public', 'data', 'hasil_ujian');
+                onSnapshot(hasilRef, (snapshot) => {
+                    const temp = [];
+                    snapshot.forEach(doc => {
+                        temp.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    // Urutkan terbaru
+                    temp.sort((a, b) => {
+                        const timeA = a.timestamp?.toMillis ? a.timestamp.toMillis() : Date.now();
+                        const timeB = b.timestamp?.toMillis ? b.timestamp.toMillis() : Date.now();
+                        return timeB - timeA; 
+                    });
+                    
+                    window.dataHasilUjian = temp; 
+                    if(window.renderTabelHasil) window.renderTabelHasil();
+                }, (err) => console.error("Error mengambil Hasil Ujian:", err));
             }
         });
     </script>
@@ -832,18 +878,44 @@
         let currentBgIndex = 0;
         const totalThemes = 6;
 
+        // MEMULIHKAN STATE & SESI KETIKA HALAMAN DI-REFRESH
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedWali = sessionStorage.getItem('waliData');
+            if (savedWali) {
+                const data = JSON.parse(savedWali);
+                window.activeWaliKelas = data.kelas;
+                window.activeWaliNama = data.nama;
+                
+                const displayEl = document.getElementById('display-active-kelas');
+                if(displayEl) displayEl.innerText = `- ${data.kelas} (${data.nama})`;
+                
+                const manualKelasEl = document.getElementById('manual-kelas');
+                if(manualKelasEl) manualKelasEl.value = data.kelas;
+            }
+
+            const savedView = sessionStorage.getItem('activeView');
+            if (savedView) {
+                navigate(savedView);
+            }
+        });
+
         function navigate(viewId) {
             document.querySelectorAll('main > div[id^="view-"]').forEach(el => el.classList.add('hidden-view'));
             document.getElementById(`view-${viewId}`).classList.remove('hidden-view');
+            
+            // Simpan posisi terakhir di session (untuk refresh browser)
+            sessionStorage.setItem('activeView', viewId);
+
+            // Jika masuk ke Menu Ujian, render tabel hasil ujian
+            if(viewId === 'guru-ujian' && window.renderTabelHasil) {
+                window.renderTabelHasil();
+            }
 
             // --- Logika Pergantian Background Otomatis ---
             const bgElement = document.getElementById('main-bg');
             if (bgElement) {
-                // Hapus class tema saat ini
                 bgElement.classList.remove(`bg-theme-${currentBgIndex}`);
-                // Pindah ke tema selanjutnya (0 sampai 5, lalu kembali ke 0)
                 currentBgIndex = (currentBgIndex + 1) % totalThemes;
-                // Tambahkan class tema baru
                 bgElement.classList.add(`bg-theme-${currentBgIndex}`);
             }
         }
@@ -863,7 +935,7 @@
             }
         }
 
-        // --- SISTEM POPUP MODAL ---
+        // --- SISTEM POPUP MODAL UMUM ---
         window.showModal = function(title, message, type='success') {
             const modal = document.getElementById('custom-modal');
             const content = document.getElementById('custom-modal-content');
@@ -899,6 +971,72 @@
             }, 10);
         }
 
+        // --- SISTEM MODAL HTML KHUSUS (UNTUK LIHAT DETAIL JAWABAN) ---
+        window.showHTMLModal = function(title, htmlContent) {
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('custom-modal-content');
+            
+            content.innerHTML = `
+                <div class="text-center w-full max-w-2xl mx-auto">
+                    <h3 class="text-2xl font-bold text-white mb-4 border-b border-gray-700 pb-2">${title}</h3>
+                    <div class="mb-6 text-left">
+                        ${htmlContent}
+                    </div>
+                    <button onclick="closeModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition shadow-lg">Tutup Lembar Jawaban</button>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Melebarkan modal khusus untuk menampilkan list jawaban
+            content.classList.remove('max-w-sm');
+            content.classList.add('max-w-2xl');
+
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        // --- SISTEM MODAL KONFIRMASI (UNTUK SISWA SAAT MASUK UJIAN) ---
+        window.showConfirmModal = function(title, message, onConfirmCallback) {
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('custom-modal-content');
+            
+            window.tempConfirmCallback = () => {
+                closeModal();
+                if(onConfirmCallback) onConfirmCallback();
+            };
+
+            let iconHtml = `<div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-blue-900/50 border-2 border-blue-500 shadow-lg shadow-blue-500/30"><i class="fas fa-question-circle text-3xl text-blue-400"></i></div>`;
+            
+            let btnHtml = `
+                <div class="flex space-x-3 mt-4">
+                    <button onclick="closeModal()" class="w-1/2 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded transition shadow-lg border border-gray-500">Batal</button>
+                    <button onclick="window.tempConfirmCallback()" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition shadow-lg">Ya, Mulai</button>
+                </div>
+            `;
+
+            content.innerHTML = `
+                <div class="text-center">
+                    ${iconHtml}
+                    <h3 class="text-2xl font-bold text-white mb-4">${title}</h3>
+                    <div class="text-left bg-gray-900 p-4 rounded-lg border border-gray-700 font-mono text-sm text-gray-300 whitespace-pre-wrap leading-relaxed shadow-inner">
+${message}
+                    </div>
+                    ${btnHtml}
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
         window.closeModal = function() {
             const modal = document.getElementById('custom-modal');
             const content = document.getElementById('custom-modal-content');
@@ -907,11 +1045,14 @@
             setTimeout(() => {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
+                
+                // Kembalikan lebar modal ke standar jika tadinya dilebarkan
+                content.classList.remove('max-w-2xl');
+                content.classList.add('max-w-sm');
             }, 300);
         }
 
         // --- FUNGSI SISWA (PUSH KE FIREBASE) ---
-
         window.submitAbsen = async function() {
             if(!window.currentUser) { showModal("Tunggu Sebentar", "Sedang menghubungkan ke server Firebase...", "info"); return; }
 
@@ -1127,16 +1268,13 @@
             }));
 
             try {
-                // Konversi array JSON ke tabel Worksheet
                 const ws = XLSX.utils.json_to_sheet(excelData);
                 const wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, "Rekap_Absensi");
 
-                // Generate nama file otomatis sesuai hari ini
                 const rawDate = new Date().toLocaleDateString('id-ID').replace(/\//g, '-');
                 const fileName = `Rekap_Absensi_${window.activeWaliKelas}_${rawDate}.xlsx`;
 
-                // Picu download file 
                 XLSX.writeFile(wb, fileName);
                 showModal("Berhasil!", `File Excel absensi (${fileName}) otomatis terunduh dan disimpan di perangkat Anda.`, "success");
             } catch(e) {
@@ -1154,14 +1292,12 @@
                 return;
             }
 
-            // Format nomor telepon menjadi standar internasional WA (62)
             if (noWA.startsWith('0')) {
                 noWA = '62' + noWA.substring(1);
             } else if (noWA.startsWith('+')) {
                 noWA = noWA.substring(1);
             }
 
-            // Cari data absensi siswa bersangkutan khusus di kelas Wali
             const dataAnak = window.dataAbsensi.filter(item => 
                 item.kelas.toUpperCase() === window.activeWaliKelas && 
                 item.nama.toLowerCase().includes(namaSiswa)
@@ -1172,17 +1308,15 @@
                 return;
             }
 
-            // Hitung Rekapitulasi (Total Semua Masuk)
             let namaAsli = dataAnak[0].nama;
             let totalKehadiran = dataAnak.length;
             let rekap = { Hadir: 0, Sakit: 0, Izin: 0, Bolos: 0, Alpa: 0 };
             
             dataAnak.forEach(item => {
                 if(rekap[item.status] !== undefined) rekap[item.status]++;
-                else rekap["Alpa"]++; // Fallback
+                else rekap["Alpa"]++;
             });
 
-            // Susun Teks Pesan WhatsApp
             let text = `*LAPORAN REKAP ABSENSI SISWA*\n*SMP ULUL ALBAB*\n\n`;
             text += `Yth. Bapak/Ibu Orang Tua dari:\n`;
             text += `*Nama :* ${namaAsli}\n`;
@@ -1197,15 +1331,12 @@
             text += `Mohon kerjasama Bapak/Ibu untuk terus memantau perkembangan dan kedisiplinan ananda. Terima kasih.\n\n`;
             text += `Salam Hormat,\n*Wali Kelas ${window.activeWaliKelas}*\n_${window.activeWaliNama}_`;
 
-            // Ubah teks menjadi format link URL aman
             const encodedText = encodeURIComponent(text);
             const waLink = `https://wa.me/${noWA}?text=${encodedText}`;
 
-            // Reset field input
             document.getElementById('wa-nama-siswa').value = '';
             document.getElementById('wa-nomor').value = '';
 
-            // Buka Tab WhatsApp Web / App
             window.open(waLink, '_blank');
             showModal("Membuka WhatsApp", "Laporan telah selesai disusun dan sedang diarahkan ke aplikasi WhatsApp Anda.", "success");
         };
@@ -1301,6 +1432,9 @@
                         const searchInput = document.getElementById('search-nama-walikelas');
                         if(searchInput) searchInput.value = "";
                         
+                        // SIMPAN KE SESSION STORAGE
+                        sessionStorage.setItem('waliData', JSON.stringify({ kelas: targetKelas, nama: dataAkun.nama }));
+
                         navigate('guru-walikelas'); 
                         document.getElementById('wali-pwd').value = '';
                         document.getElementById('wali-kelas-target').value = '';
@@ -1315,6 +1449,14 @@
             } catch (e) {
                 showModal("Error", "Gagal login: " + e.message, "error");
             }
+        }
+
+        window.logoutWaliKelas = function() {
+            sessionStorage.removeItem('waliData');
+            sessionStorage.removeItem('activeView');
+            window.activeWaliKelas = "";
+            window.activeWaliNama = "";
+            navigate('home');
         }
 
         window.setToken = function() {
@@ -1485,8 +1627,9 @@
             showModal("Sukses", `Soal berhasil ditambahkan ke bank soal.`, "success");
         }
 
+        // --- FUNGSI MASUK ROOM UJIAN SISWA ---
         window.enterExamRoom = async function() {
-            if(!window.currentUser) { showModal("Tunggu", "Belum terkoneksi ke server.", "error"); return; }
+            if(!window.currentUser) { showModal("Tunggu", "Belum terkoneksi ke server Database.", "error"); return; }
             
             const inputRoom = document.getElementById('room-code-input').value.toUpperCase();
             const namaPeserta = document.getElementById('exam-nama-input').value.trim();
@@ -1496,61 +1639,88 @@
                 return;
             }
 
-            if(inputRoom !== window.currentRoomCode) {
-                showModal('Akses Ditolak', `Kode Room Tidak Ditemukan! (Hint: Coba ketik ${window.currentRoomCode})`, 'error');
+            let examData = null;
+
+            try {
+                const docRef = window.fbDoc(window.db, 'artifacts', window.appId, 'public', 'data', 'active_exams', inputRoom);
+                const docSnap = await window.fbGetDoc(docRef);
+                if (docSnap.exists()) {
+                    examData = docSnap.data();
+                }
+            } catch(e) {
+                console.error("Fetch exam error", e);
+            }
+
+            if (!examData && inputRoom === window.currentRoomCode && window.activeExamMetadata) {
+                examData = window.activeExamMetadata;
+            }
+
+            if (!examData) {
+                showModal('Akses Ditolak', `Kode Room "${inputRoom}" Tidak Ditemukan atau Ujian belum diterbitkan oleh guru Anda!`, 'error');
                 return;
             }
 
-            try {
-                const liveRef = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'live_exams');
-                const docSnap = await window.fbAddDoc(liveRef, {
-                    nama: namaPeserta,
-                    room: window.currentRoomCode,
-                    status: 'Mengerjakan',
-                    timestamp: window.fbServerTimestamp()
-                });
-                currentLiveExamId = docSnap.id; 
-            } catch(e) {
-                console.error("Gagal mengirim status live", e);
-            }
+            window.currentRoomCode = examData.room;
+            examDuration = examData.durasi;
+            bankSoal = JSON.parse(examData.soal || "[]");
 
-            document.getElementById('exam-login-area').classList.add('hidden');
-            document.getElementById('exam-active-area').classList.remove('hidden');
-            
-            let soalHtml = `<div class="text-left w-full h-full text-white overflow-y-auto pr-2 custom-scrollbar">
-                <h4 class="font-bold text-lg mb-6 text-cyan-400 border-b border-gray-700 pb-2"><i class="fas fa-file-alt mr-2"></i> Lembar Soal Ujian</h4>`;
-            
-            if(bankSoal.length === 0) {
-                soalHtml += `<div class="flex flex-col items-center justify-center py-10"><i class="fas fa-exclamation-circle text-4xl text-gray-600 mb-4"></i><p class="text-center text-gray-400">Soal belum diterbitkan oleh guru.</p></div>`;
-            } else {
-                bankSoal.forEach((s, i) => {
-                    soalHtml += `<div class="mb-8 bg-gray-900/60 p-5 rounded-lg border border-gray-700 shadow-lg"><p class="mb-4 font-semibold text-gray-200 text-base leading-relaxed">${i+1}. ${s.pertanyaan}</p>`;
-                    if(s.tipe === 'PG' && s.opsi && s.opsi.length > 0) {
-                        soalHtml += `<div class="space-y-3 pl-2">`;
-                        s.opsi.forEach((opt, optIdx) => {
-                            soalHtml += `<label class="flex items-start cursor-pointer p-3 bg-gray-800 rounded-lg border border-gray-700 hover:border-cyan-500 transition group">
-                                <input type="radio" name="q${i}" class="mt-1 mr-3 w-4 h-4 text-cyan-600 bg-gray-900 border-gray-600 focus:ring-cyan-500">
-                                <span class="text-gray-300 group-hover:text-cyan-100">${opt}</span>
-                            </label>`;
-                        });
+            const detailsMsg = `📋 MATA PELAJARAN : ${examData.mapel}\n👨‍🏫 NAMA GURU    : ${examData.guru}\n🏫 KELAS          : ${examData.kelas}\n⏱️ DURASI WAKTU   : ${examData.durasi} Menit\n📅 DITERBITKAN    : ${examData.hari}, ${examData.tanggal} (${examData.waktu} WIB)\n\nSilakan bersiap. Waktu akan langsung berjalan ketika Anda mengklik 'Ya, Mulai'.`;
+
+            showConfirmModal("Detail Ujian Ditemukan", detailsMsg, async () => {
+                
+                try {
+                    const liveRef = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'live_exams');
+                    const docSnapLive = await window.fbAddDoc(liveRef, {
+                        nama: namaPeserta,
+                        room: inputRoom,
+                        status: 'Mengerjakan',
+                        timestamp: window.fbServerTimestamp()
+                    });
+                    currentLiveExamId = docSnapLive.id; 
+                } catch(e) { console.error("Gagal mengirim status live", e); }
+
+                document.getElementById('exam-login-area').classList.add('hidden');
+                document.getElementById('exam-active-area').classList.remove('hidden');
+                
+                let soalHtml = `<div class="text-left w-full h-full text-white overflow-y-auto pr-2 custom-scrollbar">
+                    <h4 class="font-bold text-lg mb-6 text-cyan-400 border-b border-gray-700 pb-2"><i class="fas fa-file-alt mr-2"></i> Lembar Soal Ujian - ${examData.mapel}</h4>`;
+                
+                if(bankSoal.length === 0) {
+                    soalHtml += `<div class="flex flex-col items-center justify-center py-10"><i class="fas fa-exclamation-circle text-4xl text-gray-600 mb-4"></i><p class="text-center text-gray-400">Guru belum memasukkan soal ke dalam Room ini.</p></div>`;
+                } else {
+                    bankSoal.forEach((s, i) => {
+                        soalHtml += `<div class="mb-8 bg-gray-900/60 p-5 rounded-lg border border-gray-700 shadow-lg"><p class="mb-4 font-semibold text-gray-200 text-base leading-relaxed">${i+1}. ${s.pertanyaan}</p>`;
+                        if(s.tipe === 'PG' && s.opsi && s.opsi.length > 0) {
+                            soalHtml += `<div class="space-y-3 pl-2">`;
+                            s.opsi.forEach((opt, optIdx) => {
+                                // MENAMBAHKAN VALUE (A, B, C, D) AGAR BISA DITANGKAP SAAT KUMPULKAN
+                                const charVal = ['A','B','C','D'][optIdx] || '';
+                                soalHtml += `<label class="flex items-start cursor-pointer p-3 bg-gray-800 rounded-lg border border-gray-700 hover:border-cyan-500 transition group">
+                                    <input type="radio" name="q${i}" value="${charVal}" class="mt-1 mr-3 w-4 h-4 text-cyan-600 bg-gray-900 border-gray-600 focus:ring-cyan-500">
+                                    <span class="text-gray-300 group-hover:text-cyan-100">${opt}</span>
+                                </label>`;
+                            });
+                            soalHtml += `</div>`;
+                        } else {
+                            // MEMBERIKAN ID PADA TEXTAREA AGAR BISA DITANGKAP
+                            soalHtml += `<textarea id="esai-q${i}" rows="4" class="w-full bg-gray-800 border border-gray-600 text-white text-sm rounded-lg p-3 mt-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="Ketik jawaban esai Anda di sini..."></textarea>`;
+                        }
                         soalHtml += `</div>`;
-                    } else {
-                        soalHtml += `<textarea rows="4" class="w-full bg-gray-800 border border-gray-600 text-white text-sm rounded-lg p-3 mt-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="Ketik jawaban esai Anda di sini..."></textarea>`;
-                    }
-                    soalHtml += `</div>`;
-                });
-                soalHtml += `<button onclick="kumpulkanUjian()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-4 px-4 rounded-lg transition shadow-lg mt-4"><i class="fas fa-paper-plane mr-2"></i> Kumpulkan Ujian</button>`;
-            }
-            soalHtml += `</div>`;
+                    });
+                    soalHtml += `<button onclick="kumpulkanUjian()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-4 px-4 rounded-lg transition shadow-lg mt-4"><i class="fas fa-paper-plane mr-2"></i> Kumpulkan Ujian & Lihat Nilai</button>`;
+                }
+                soalHtml += `</div>`;
 
-            const outputArea = document.getElementById('exam-output-area');
-            outputArea.classList.remove('items-center', 'justify-center');
-            outputArea.classList.add('items-start');
-            outputArea.innerHTML = soalHtml;
+                const outputArea = document.getElementById('exam-output-area');
+                outputArea.classList.remove('items-center', 'justify-center');
+                outputArea.classList.add('items-start');
+                outputArea.innerHTML = soalHtml;
 
-            startCountdown(examDuration * 60);
+                startCountdown(examDuration * 60);
+            });
         }
 
+        // --- MENGUMPULKAN UJIAN DAN MENGHITUNG SKOR OTOMATIS ---
         window.kumpulkanUjian = async function() {
             clearInterval(countdownInterval);
             
@@ -1568,6 +1738,40 @@
             
             const namaPeserta = document.getElementById('exam-nama-input').value || 'Peserta Anonim';
 
+            // PROSES KOLEKSI JAWABAN SISWA
+            let jawabanSiswa = [];
+            let betulPG = 0;
+            let totalPG = 0;
+
+            bankSoal.forEach((s, i) => {
+                let jwb = "";
+                
+                if (s.tipe === 'PG') {
+                    totalPG++;
+                    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                    if (selected) {
+                        jwb = selected.value; // A, B, C, atau D
+                        const kunciAsli = s.jawabanBenar ? s.jawabanBenar.substring(0,1).toUpperCase() : "";
+                        if (jwb === kunciAsli) {
+                            betulPG++;
+                        }
+                    }
+                } else {
+                    const txtArea = document.getElementById(`esai-q${i}`);
+                    if (txtArea) jwb = txtArea.value;
+                }
+                
+                jawabanSiswa.push({
+                    pertanyaan: s.pertanyaan,
+                    tipe: s.tipe,
+                    jawaban: jwb,
+                    kunci: s.jawabanBenar
+                });
+            });
+
+            // HITUNG SKOR PG SKALA 100
+            let nilaiPG = totalPG > 0 ? Math.round((betulPG / totalPG) * 100) : 0;
+
             if(window.currentUser) {
                 try {
                     if(currentLiveExamId) {
@@ -1580,6 +1784,10 @@
                         nama: namaPeserta,
                         room: window.currentRoomCode,
                         waktuKumpul: new Date().toLocaleTimeString('id-ID'),
+                        nilaiPG: nilaiPG,
+                        totalPG: totalPG,
+                        betulPG: betulPG,
+                        detailJawaban: JSON.stringify(jawabanSiswa),
                         timestamp: window.fbServerTimestamp()
                     });
                 } catch (e) { console.error("Database Error:", e); }
@@ -1590,20 +1798,25 @@
                 outputArea.classList.remove('items-start');
                 outputArea.classList.add('items-center', 'justify-center');
                 outputArea.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-12 text-center fade-in">
+                    <div class="flex flex-col items-center justify-center py-12 text-center fade-in w-full">
                         <div class="w-20 h-20 bg-green-900/50 rounded-full flex items-center justify-center mb-6 border-2 border-green-500 shadow-lg shadow-green-500/30">
                             <i class="fas fa-check text-4xl text-green-400"></i>
                         </div>
                         <h3 class="text-2xl font-bold text-white mb-2">Ujian Berhasil Dikumpulkan!</h3>
-                        <p class="text-gray-400 mb-8">Jawaban Anda telah direkam dan disimpan secara permanen di server Firebase Guru.</p>
+                        <p class="text-gray-400 mb-6">Jawaban Anda telah direkam dan disimpan secara permanen di server Firebase Guru.</p>
+                        
+                        <div class="bg-gray-900 border border-gray-700 p-4 rounded-lg w-full max-w-sm mb-8 shadow-inner">
+                            <p class="text-sm text-gray-400 uppercase tracking-widest mb-1">Skor Pilihan Ganda Anda</p>
+                            <p class="text-5xl font-bold text-green-400">${nilaiPG}</p>
+                            <p class="text-xs text-gray-500 mt-2">Benar ${betulPG} dari ${totalPG} Soal PG.</p>
+                        </div>
+
                         <button onclick="navigate('siswa-menu')" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded transition border border-gray-500">
                             <i class="fas fa-sign-out-alt mr-2"></i> Keluar Ruangan Ujian
                         </button>
                     </div>
                 `;
             }
-
-            showModal("Ujian Selesai!", "Kerja bagus! Seluruh jawaban Anda telah berhasil direkam ke Server Database Guru.", "success");
         }
 
         function startCountdown(seconds) {
@@ -1617,6 +1830,7 @@
                     timerEl.textContent = "WAKTU HABIS";
                     timerEl.classList.remove('text-red-400');
                     timerEl.classList.add('text-red-600', 'animate-pulse');
+                    kumpulkanUjian(); // OTOMATIS KUMPULKAN SAAT HABIS
                     return;
                 }
                 const m = Math.floor(seconds / 60).toString().padStart(2, '0');
@@ -1634,7 +1848,94 @@
             `;
         }
 
-        window.terbitkanUjian = function() {
+        // --- RENDER TABEL HASIL UJIAN UNTUK GURU ---
+        window.renderTabelHasil = function() {
+            const tbody = document.getElementById('hasil-ujian-body');
+            const label = document.getElementById('label-room-hasil');
+            
+            if(!tbody) return;
+            label.innerText = `(Room: ${window.currentRoomCode})`;
+
+            if(!window.dataHasilUjian) return;
+
+            // Saring hasil berdasarkan Room Code Ujian saat ini
+            const filtered = window.dataHasilUjian.filter(x => x.room === window.currentRoomCode);
+
+            if(filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-gray-500 italic">Belum ada siswa yang mengumpulkan ujian untuk room ini.</td></tr>';
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(item => {
+                const skor = item.nilaiPG !== undefined ? `${item.nilaiPG} (B: ${item.betulPG})` : '-';
+                
+                html += `
+                    <tr class="border-b border-gray-800 hover:bg-gray-800/50 transition text-gray-300">
+                        <td class="p-4 font-semibold text-white"><i class="fas fa-user-check text-green-500 mr-2"></i>${item.nama}</td>
+                        <td class="p-4 font-mono text-xs text-gray-400">${item.waktuKumpul}</td>
+                        <td class="p-4"><span class="bg-green-900/40 text-green-400 px-3 py-1 rounded border border-green-700 font-bold">${skor}</span></td>
+                        <td class="p-4 text-center">
+                            <button onclick="lihatDetailUjian('${item.id}')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-xs font-bold transition shadow-lg">
+                                <i class="fas fa-eye mr-1"></i> Lihat Jawaban
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        // --- FUNGSI GURU MELIHAT DETAIL JAWABAN SISWA ---
+        window.lihatDetailUjian = function(docId) {
+            const data = window.dataHasilUjian.find(x => x.id === docId);
+            if(!data) return;
+
+            let jawabanArr = [];
+            try { 
+                jawabanArr = JSON.parse(data.detailJawaban); 
+            } catch(e) { console.error("Gagal parse jawaban", e); }
+
+            let htmlDetail = `<div class="max-h-96 overflow-y-auto pr-3 custom-scrollbar text-left space-y-4">`;
+
+            if(jawabanArr.length === 0) {
+                htmlDetail += `<p class="text-gray-500 italic text-center">Siswa ini tidak menjawab pertanyaan apa pun atau data kosong.</p>`;
+            } else {
+                jawabanArr.forEach((jwb, idx) => {
+                    let statusIkon = '';
+                    
+                    if(jwb.tipe === 'PG') {
+                        const kunci = jwb.kunci ? jwb.kunci.substring(0,1).toUpperCase() : '';
+                        const isBenar = (jwb.jawaban === kunci);
+                        statusIkon = isBenar 
+                            ? `<i class="fas fa-check-circle text-green-400 ml-2" title="Benar"></i>` 
+                            : `<i class="fas fa-times-circle text-red-500 ml-2" title="Salah"></i>`;
+                    }
+
+                    htmlDetail += `
+                        <div class="bg-gray-800 p-4 rounded-lg border border-gray-600">
+                            <p class="text-sm text-gray-200 mb-3 leading-relaxed font-semibold"><strong>${idx+1}.</strong> ${jwb.pertanyaan}</p>
+                            <div class="bg-gray-900 p-3 rounded border border-gray-700 text-sm space-y-2">
+                                <p class="text-gray-400">
+                                    <span class="inline-block w-24">Jawaban Siswa:</span> 
+                                    <span class="text-white font-bold">${jwb.jawaban || '<em class="text-red-400">Tidak diisi</em>'}</span> ${statusIkon}
+                                </p>
+                                <p class="text-gray-500">
+                                    <span class="inline-block w-24">Kunci Asli:</span> 
+                                    <span class="text-green-500 font-mono">${jwb.kunci || '-'}</span>
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            htmlDetail += `</div>`;
+
+            showHTMLModal(`Lembar Jawaban: ${data.nama}`, htmlDetail);
+        }
+
+        // --- FUNGSI GURU MENYIMPAN UJIAN KE SERVER ---
+        window.terbitkanUjian = async function() {
             const guru = document.getElementById('setup-guru').value.trim();
             const mapel = document.getElementById('setup-mapel').value.trim();
             const kelas = document.getElementById('setup-kelas').value.trim();
@@ -1646,14 +1947,38 @@
                 return;
             }
 
+            const dateObj = new Date();
+            const examMetadata = {
+                guru: guru,
+                mapel: mapel,
+                kelas: kelas,
+                room: room,
+                durasi: parseInt(durasi),
+                soal: JSON.stringify(bankSoal), 
+                hari: dateObj.toLocaleDateString('id-ID', {weekday: 'long'}),
+                tanggal: dateObj.toLocaleDateString('id-ID'),
+                waktu: dateObj.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}),
+                timestamp: window.fbServerTimestamp ? window.fbServerTimestamp() : null
+            };
+
             window.currentRoomCode = room;
             examDuration = parseInt(durasi);
+            window.activeExamMetadata = examMetadata; 
+
+            if(window.db && window.fbDoc && window.fbSetDoc) {
+                try {
+                    const docRef = window.fbDoc(window.db, 'artifacts', window.appId, 'public', 'data', 'active_exams', room);
+                    await window.fbSetDoc(docRef, examMetadata);
+                } catch(e) { console.error("Gagal simpan exam meta", e); }
+            }
             
-            showModal("Ujian Diterbitkan!", `Guru: ${guru}\nMapel: ${mapel}\nKelas: ${kelas}\nRoom: ${room}\nDurasi: ${durasi} Menit\n\nSiswa sekarang dapat masuk menggunakan Kode Room di atas.`, "info");
+            showModal("Ujian Diterbitkan!", `Guru: ${guru}\nMapel: ${mapel}\nKelas: ${kelas}\nRoom: ${room}\nDurasi: ${durasi} Menit\n\nSiswa sekarang dapat masuk menggunakan Kode Room di atas, dan akan langsung bisa melihat informasi ujian sebelum mulai.`, "info");
             setLiveMonitorWaiting(room);
+            
+            if(window.renderTabelHasil) window.renderTabelHasil();
         }
 
-        window.bukaRoomUjian = function() {
+        window.bukaRoomUjian = async function() {
             const room = document.getElementById('setup-room').value.toUpperCase();
             const durasi = document.getElementById('setup-durasi').value;
             const guru = document.getElementById('setup-guru').value || 'Guru Pengampu';
@@ -1665,11 +1990,7 @@
                 return;
             }
 
-            window.currentRoomCode = room;
-            examDuration = parseInt(durasi);
-            
-            showModal("Room DIBUKA!", `Room ${room} aktif.\nMata Pelajaran: ${mapel} (${kelas})\nOleh: ${guru}\nDurasi: ${durasi} menit.`, "info");
-            setLiveMonitorWaiting(room);
+            await terbitkanUjian();
         }
 
         window.generateAIQuestions = async function() {
