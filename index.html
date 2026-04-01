@@ -118,8 +118,8 @@
                         <h4 class="text-lg font-semibold text-cyan-300 mb-3"><i class="fas fa-thumbtack mr-2"></i> Mading Digital</h4>
                         <blockquote class="border-l-4 border-cyan-500 italic p-4 bg-gray-800 rounded-r shadow-inner relative">
                             <i class="fas fa-quote-left text-gray-600 absolute top-2 right-4 text-2xl opacity-50"></i>
-                            <p id="mading-content" class="text-gray-300 text-sm leading-relaxed mb-2">"Pengumuman Wali Kelas: Harap seluruh siswa mempersiapkan ujian harian dengan baik."</p>
-                            <footer id="mading-time" class="text-xs text-cyan-400 mt-2">- Update: Hari Ini, 07:00 WIB</footer>
+                            <p id="mading-content" class="text-gray-300 text-sm leading-relaxed mb-2">Belum ada pengumuman terbaru.</p>
+                            <footer id="mading-time" class="text-xs text-cyan-400 mt-2">-</footer>
                         </blockquote>
                     </div>
                 </div>
@@ -563,15 +563,20 @@
                         <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-key text-yellow-400 mr-2"></i> 🔑 Token Kehadiran</h3>
                         <p class="text-xs text-gray-400 mb-3">Bagikan token ini kepada murid untuk absen hari ini.</p>
                         <div class="flex flex-col space-y-3">
-                            <div class="flex">
-                                <input type="text" id="admin-token" placeholder="Ketik token..." class="bg-gray-900 border border-gray-600 text-white font-mono tracking-widest text-center rounded-l focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2 uppercase">
-                                <button onclick="setToken()" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-3 rounded-r transition text-sm">
-                                    Update
-                                </button>
+                            <div class="flex space-x-2">
+                                <input type="text" id="admin-token" placeholder="Ketik token..." class="bg-gray-900 border border-gray-600 text-white font-mono tracking-widest text-center rounded focus:ring-yellow-500 focus:border-yellow-500 block w-1/2 p-2 uppercase">
+                                <div class="flex items-center w-1/2 bg-gray-900 border border-gray-600 rounded pr-1">
+                                    <input type="number" id="token-durasi" placeholder="Menit" class="bg-transparent border-none text-white text-center w-full focus:ring-0 p-2 text-sm outline-none" min="1">
+                                    <span class="text-xs text-gray-400 mr-2">Menit</span>
+                                </div>
                             </div>
+                            <button onclick="setToken()" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-3 rounded transition text-sm w-full shadow-lg">
+                                Set Token & Durasi
+                            </button>
                             <div class="bg-gray-800 p-3 rounded text-center border border-gray-700">
                                 <span class="text-xs text-gray-400 block">Token Aktif:</span>
                                 <span id="active-token-display" class="text-xl font-bold text-yellow-400 tracking-widest">- Belum Diset -</span>
+                                <span id="token-expiry-display" class="text-[10px] text-gray-500 block mt-1"></span>
                             </div>
                         </div>
                     </div>
@@ -581,8 +586,25 @@
                         <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-edit text-cyan-400 mr-2"></i> 📢 Update Mading</h3>
                         <div class="flex flex-col space-y-2">
                             <textarea id="input-mading" rows="3" placeholder="Tulis pengumuman baru untuk seluruh siswa..." class="w-full bg-gray-900 border border-gray-600 text-white text-sm rounded focus:ring-cyan-500 focus:border-cyan-500 block p-2 resize-none"></textarea>
+                            <div class="flex items-center space-x-2">
+                                <label class="text-xs text-gray-400">Tampil selama:</label>
+                                <input type="number" id="mading-durasi" value="1" min="1" class="w-16 bg-gray-900 border border-gray-600 text-white text-sm rounded p-1 text-center outline-none focus:border-cyan-500">
+                                <span class="text-xs text-gray-400">Hari</span>
+                            </div>
                             <button onclick="updateMading()" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded transition text-sm w-full shadow-lg">
                                 Posting Pengumuman
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Database Links -->
+                    <div class="glass-panel p-6 rounded-xl border border-gray-700">
+                        <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-database text-orange-400 mr-2"></i> 📊 Data Terkirim ke Server</h3>
+                        <p class="text-xs text-gray-400 mb-4">Project ID: <span class="text-white font-mono">portal-ujian-online</span></p>
+                        <div class="space-y-2">
+                            <button onclick="showModal('Firebase Data Terekam!', 'Semua data murid disimpan dalam 1 database utama dengan label Kelas.\nSaat di-export ke Excel, Kepala Sekolah/Admin dapat langsung mem-filter berdasarkan kelas masing-masing.', 'info')" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-600 text-left text-sm text-white py-2 px-4 rounded transition flex justify-between items-center">
+                                <span><i class="fas fa-table text-blue-400 mr-2"></i> Info Sinkronisasi DB</span>
+                                <i class="fas fa-cloud-upload-alt text-gray-500"></i>
                             </button>
                         </div>
                     </div>
@@ -616,12 +638,9 @@
                 <!-- Kolom Kanan: Monitoring Anak Wali -->
                 <div class="lg:col-span-2 glass-panel p-6 rounded-xl border-t-4 border-teal-500 flex flex-col h-full">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold text-white"><i class="fas fa-users-viewfinder text-teal-400 mr-2"></i> 📡 Monitor Absensi Kelas</h3>
-                        <!-- FILTER HARI UNTUK WALI KELAS & TOMBOL EXPORT DITAMBAHKAN DI SINI -->
+                        <h3 class="text-xl font-bold text-white"><i class="fas fa-users-viewfinder text-teal-400 mr-2"></i> 📡 Live Monitor Absensi Kelas</h3>
+                        <!-- FILTER HARI UNTUK WALI KELAS DITAMBAHKAN DI SINI -->
                         <div class="flex space-x-2 items-center">
-                            <button onclick="exportKeCSV()" class="bg-green-700 hover:bg-green-600 border border-green-500 text-white text-xs py-1 px-3 rounded transition flex items-center shadow-lg" title="Download Excel/CSV untuk Google Sheets">
-                                <i class="fas fa-file-excel mr-1"></i> Export Data
-                            </button>
                             <select id="filter-hari-walikelas" onchange="filterHariAbsensi()" class="bg-gray-800 border border-gray-600 text-teal-400 text-xs rounded px-2 py-1 focus:ring-teal-500 focus:border-teal-500 outline-none cursor-pointer">
                                 <option value="Semua">Semua Hari</option>
                                 <option value="Senin">Senin</option>
@@ -632,6 +651,7 @@
                                 <option value="Sabtu">Sabtu</option>
                                 <option value="Minggu">Minggu</option>
                             </select>
+                            <span class="text-xs bg-gray-800 border border-gray-600 text-green-400 py-1 px-3 rounded hidden md:inline-block"><i class="fas fa-filter mr-1"></i> Kelas Sendiri</span>
                         </div>
                     </div>
                     <div class="overflow-y-auto flex-1 bg-gray-900 rounded-lg border border-gray-700 p-2 custom-scrollbar">
@@ -644,7 +664,7 @@
                                     <th class="p-3 border-b border-gray-700">Waktu</th>
                                     <th class="p-3 border-b border-gray-700">Status</th>
                                     <th class="p-3 border-b border-gray-700 max-w-[150px]">Catatan</th>
-                                    <th class="p-3 border-b border-gray-700 text-center">Aksi</th>
+                                    <th class="p-3 border-b border-gray-700 text-center">Validasi</th>
                                 </tr>
                             </thead>
                             <tbody id="walikelas-absen-body">
@@ -653,10 +673,6 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-                    <!-- Instruksi WA -->
-                    <div class="mt-3 bg-gray-800/50 border border-green-800/50 p-2 rounded text-xs text-gray-400 flex items-center justify-center">
-                        <i class="fab fa-whatsapp text-green-500 text-lg mr-2"></i> <span>Klik logo WA pada tabel untuk membuat rangkuman otomatis khusus untuk siswa tersebut.</span>
                     </div>
                 </div>
             </div>
@@ -762,6 +778,7 @@
     <script>
         // State Variabel Lokal
         window.activeTeacherToken = "";
+        window.tokenExpiryTime = null; // TRACKING WAKTU TOKEN
         window.currentRoomCode = "FIS10A";
         window.activeWaliKelas = ""; 
         window.activeWaliNama = ""; // Menyimpan Nama Guru yg Login
@@ -859,45 +876,9 @@
                 return;
             }
 
-            const dateObj = new Date();
-            const payload = {
-                nama: name,
-                kelas: kelas,
-                hari: dateObj.toLocaleDateString('id-ID', {weekday: 'long'}),
-                tanggal: dateObj.toLocaleDateString('id-ID'),
-                waktu: dateObj.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}),
-                status: statusAbsen,
-                catatan: "", 
-                isValid: true,
-                timestamp: window.fbServerTimestamp()
-            };
-
-            try {
-                // KIRIM KE FIREBASE
-                const ref = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'absensi');
-                await window.fbAddDoc(ref, payload);
-
-                showModal("Absensi Berhasil!", `Terima kasih ${name}.\nData kehadiran Anda (${statusAbsen}) berhasil direkam di Server Firebase!`, "success");
-
-                document.getElementById('student-name').value = '';
-                document.getElementById('student-class-input').value = '';
-                document.getElementById('token-input').value = '';
-            } catch(e) {
-                showModal("Database Error", "Gagal mengirim data ke server: " + e.message, "error");
-            }
-        }
-
-        // --- FUNGSI BARU: INPUT ABSEN MANUAL GURU (PUSH KE FIREBASE) ---
-        window.submitAbsenManual = async function() {
-            if(!window.currentUser) return;
-
-            const nama = document.getElementById('manual-nama').value.trim();
-            const kelas = document.getElementById('manual-kelas').value.trim();
-            const status = document.getElementById('manual-status').value;
-            const catatan = document.getElementById('manual-catatan').value.trim();
-
-            if(!nama || !kelas) {
-                showModal("Data Tidak Lengkap", "Mohon isi Nama Murid dan Kelas terlebih dahulu!", "error");
+            // CEK KADALUARSA TOKEN
+            if (window.tokenExpiryTime && Date.now() > window.tokenExpiryTime) {
+                showModal("Token Kadaluarsa", "Waktu absensi untuk token ini sudah habis!\nSilakan minta token absensi yang baru kepada Guru Wali Anda.", "error");
                 return;
             }
 
@@ -935,127 +916,6 @@
             if(window.renderTabelAbsensi) window.renderTabelAbsensi(); // Render ulang dengan filter yang baru
         }
 
-        // --- EXPORT KE CSV (GOOGLE SHEETS/EXCEL) ---
-        window.exportKeCSV = function() {
-            if (!window.dataAbsensi || window.dataAbsensi.length === 0) {
-                showModal("Data Kosong", "Belum ada data absensi untuk diekspor ke Google Sheets/Excel.", "error");
-                return;
-            }
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            // Header CSV
-            csvContent += "Nama Murid,Kelas,Hari,Tanggal,Waktu,Status,Catatan\n"; 
-
-            let hasData = false;
-            window.dataAbsensi.forEach(item => {
-                // Filter hanya untuk kelas Wali yang login
-                if (window.activeWaliKelas === "" || item.kelas.toUpperCase() === window.activeWaliKelas) {
-                    // Filter berdasarkan hari yang sedang di-select
-                    let isHariMatch = true;
-                    if (window.activeFilterHari !== "Semua") {
-                        const dataHari = item.hari ? item.hari.toLowerCase().replace("'", "") : "";
-                        const filterHari = window.activeFilterHari.toLowerCase();
-                        isHariMatch = (dataHari === filterHari);
-                    }
-
-                    if (isHariMatch) {
-                        hasData = true;
-                        // Escape quotes untuk menghindari format csv yang rusak jika ada koma di catatan
-                        let safeNama = item.nama ? item.nama.replace(/"/g, '""') : "";
-                        let safeCatatan = item.catatan ? item.catatan.replace(/"/g, '""') : "";
-                        
-                        let row = `"${safeNama}","${item.kelas}","${item.hari}","${item.tanggal}","${item.waktu}","${item.status}","${safeCatatan}"`;
-                        csvContent += row + "\n";
-                    }
-                }
-            });
-
-            if (!hasData) {
-                showModal("Data Kosong", "Tidak ada data yang sesuai dengan filter Hari/Kelas saat ini.", "error");
-                return;
-            }
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            const namaFile = `Rekap_Absensi_${window.activeWaliKelas || 'Semua'}_${window.activeFilterHari}.csv`;
-            link.setAttribute("download", namaFile);
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showModal("Export Berhasil", `File CSV (${namaFile}) berhasil diunduh.\n\nAnda bisa langsung mengunggahnya ke Google Sheets untuk melakukan filter per anak.`, "success");
-        }
-
-        // --- REKAP WHATSAPP PER SISWA (FITUR EKSTRA) ---
-        window.rekapSiswaWA = function(namaSiswa) {
-            if(!window.dataAbsensi) return;
-            
-            // Format Data yang akan dihitung
-            let rekap = { Hadir: 0, Izin: 0, Sakit: 0, Bolos: 0, Alpa: 0 };
-            let history = [];
-
-            // Kumpulkan hanya data milik Siswa yang dipilih dan di Kelas tersebut
-            window.dataAbsensi.forEach(item => {
-                if (item.nama === namaSiswa && (window.activeWaliKelas === "" || item.kelas.toUpperCase() === window.activeWaliKelas)) {
-                    if(rekap[item.status] !== undefined) rekap[item.status]++;
-                    let noteInfo = item.catatan ? ` (Catatan: ${item.catatan})` : '';
-                    history.push(`${item.tanggal} - ${item.hari}: ${item.status}${noteInfo}`);
-                }
-            });
-
-            // Bangun Template Pesan WhatsApp
-            let pesan = `Halo Bapak/Ibu Orang Tua dari *${namaSiswa}* (Kelas ${window.activeWaliKelas}).\n\n`;
-            pesan += `Berikut adalah rekap absensi ananda yang tercatat di sistem:\n\n`;
-            pesan += `🟢 Hadir: ${rekap.Hadir} Hari\n`;
-            pesan += `🟡 Izin: ${rekap.Izin} Hari\n`;
-            pesan += `🔵 Sakit: ${rekap.Sakit} Hari\n`;
-            pesan += `🔴 Bolos: ${rekap.Bolos} Kali\n`;
-            pesan += `⚫ Alpa (Tanpa Keterangan): ${rekap.Alpa} Hari\n\n`;
-            pesan += `*Rincian 5 Hari Terakhir:*\n`;
-            
-            if(history.length === 0) {
-                pesan += `- Belum ada data\n`;
-            } else {
-                // Ambil 5 data history teratas
-                history.slice(0, 5).forEach(h => pesan += `- ${h}\n`); 
-            }
-            pesan += `\nMohon bantuannya untuk dipantau di rumah. Terima kasih banyak. 🙏\n`;
-            pesan += `\n_Pesan otomatis dari Wali Kelas via Portal Sekolah Digital_`;
-
-            // Konversi teks menjadi link resmi WhatsApp API
-            let waLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(pesan)}`;
-
-            // Tampilkan ke Modal khusus WhatsApp
-            const modal = document.getElementById('custom-modal');
-            const content = document.getElementById('custom-modal-content');
-
-            content.innerHTML = `
-                <div class="text-center">
-                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-green-900/50 border-2 border-green-500 shadow-lg shadow-green-500/30">
-                        <i class="fab fa-whatsapp text-4xl text-green-400"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Rekap Absensi: ${namaSiswa}</h3>
-                    <p class="text-gray-400 text-xs mb-4">Pesan sudah dirangkum otomatis dan siap dikirim ke Orang Tua.</p>
-                    
-                    <textarea class="w-full bg-gray-900 border border-gray-700 text-gray-300 text-sm p-3 rounded h-48 mb-4 font-mono resize-none custom-scrollbar outline-none" readonly>${pesan}</textarea>
-                    
-                    <a href="${waLink}" target="_blank" onclick="closeModal()" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded transition shadow-lg mb-2">
-                        Buka & Kirim via WhatsApp
-                    </a>
-                    <button onclick="closeModal()" class="w-full text-gray-400 hover:text-white text-sm py-2 transition">Batal</button>
-                </div>
-            `;
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => {
-                content.classList.remove('scale-95', 'opacity-0');
-                content.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
         // Render Data Absensi dari variabel global (yang diupdate oleh onSnapshot)
         window.renderTabelAbsensi = function() {
             const tbodySiswa = document.getElementById('absen-table-body');
@@ -1083,9 +943,6 @@
 
                 const verifIcon = item.isValid ? '<i class="fas fa-check-circle text-green-500"></i>' : '<i class="fas fa-times-circle text-red-500"></i>';
                 const catatanText = item.catatan ? item.catatan : '<span class="text-gray-600 italic">-</span>';
-
-                // Escape single quote pada nama siswa agar tombol WA tidak rusak
-                const safeNamaFunction = item.nama ? item.nama.replace(/'/g, "\\'") : "Siswa";
 
                 // Tabel Siswa (Semua Data)
                 htmlSiswa += `
@@ -1121,12 +978,7 @@
                             <td class="p-3 text-gray-400 font-mono">${item.waktu}</td>
                             <td class="p-3">${badge}</td>
                             <td class="p-3 text-xs text-gray-300 max-w-[150px] truncate" title="${item.catatan}">${catatanText}</td>
-                            <td class="p-3 text-center whitespace-nowrap">
-                                <span class="text-lg align-middle mr-2">${verifIcon}</span>
-                                <button onclick="rekapSiswaWA('${safeNamaFunction}')" class="bg-green-600 hover:bg-green-500 text-white p-2 rounded shadow-lg transition align-middle" title="Buat Pesan WA Otomatis untuk Orang Tua">
-                                    <i class="fab fa-whatsapp"></i>
-                                </button>
-                            </td>
+                            <td class="p-3 text-center text-lg">${verifIcon}</td>
                         </tr>
                     `;
                 }
@@ -1165,7 +1017,7 @@
             const pwd = document.getElementById('reg-pwd').value;
 
             // KODE RAHASIA ADMIN (Mencegah Sembarang Orang Buat Akun)
-            if (adminCode !== "merdeka1945") {
+            if (adminCode !== "ADMIN123") {
                 showModal("Akses Ditolak", "Kode Rahasia Admin yang Anda masukkan SALAH.\nAnda tidak memiliki izin membuat akun.", "error");
                 return;
             }
@@ -1259,26 +1111,59 @@
 
         window.setToken = function() {
             const input = document.getElementById('admin-token').value.toUpperCase();
-            if(input) {
-                window.activeTeacherToken = input;
-                document.getElementById('active-token-display').textContent = window.activeTeacherToken;
-                showModal("Token Diperbarui", `Token kehadiran berhasil diset menjadi: ${window.activeTeacherToken}\nMurid sudah dapat menggunakan token ini untuk absen.`, "success");
+            const durasiMenit = parseInt(document.getElementById('token-durasi').value);
+
+            if(!input) {
+                showModal("Error", "Token tidak boleh kosong!", "error");
+                return;
             }
+            if(!durasiMenit || durasiMenit <= 0) {
+                showModal("Error", "Masukkan durasi waktu token (dalam menit) yang valid!", "error");
+                return;
+            }
+
+            window.activeTeacherToken = input;
+            window.tokenExpiryTime = Date.now() + (durasiMenit * 60000); // 1 Menit = 60000 ms
+
+            document.getElementById('active-token-display').textContent = window.activeTeacherToken;
+            
+            const expiryDate = new Date(window.tokenExpiryTime);
+            const expiryTimeStr = expiryDate.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('token-expiry-display').textContent = `Berlaku s/d: ${expiryTimeStr} WIB`;
+
+            // Auto-reset visual jika token habis waktunya
+            setTimeout(() => {
+                if (window.activeTeacherToken === input && Date.now() >= window.tokenExpiryTime) {
+                    window.activeTeacherToken = "";
+                    document.getElementById('active-token-display').textContent = "- KADALUARSA -";
+                    document.getElementById('token-expiry-display').textContent = "";
+                }
+            }, durasiMenit * 60000);
+
+            showModal("Token Diperbarui", `Token kehadiran berhasil diset: ${window.activeTeacherToken}\n\nBerlaku selama ${durasiMenit} Menit (sampai pukul ${expiryTimeStr} WIB).`, "success");
         }
 
         window.updateMading = function() {
             const val = document.getElementById('input-mading').value;
+            const durasiHari = parseInt(document.getElementById('mading-durasi').value) || 1;
+
             if(!val.trim()) {
                 showModal("Error", "Pengumuman tidak boleh kosong!", "error");
                 return;
             }
             document.getElementById('mading-content').innerText = `"${val}"`;
             
-            const timeStr = new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
-            document.getElementById('mading-time').innerText = `- Update: Hari Ini, ${timeStr} WIB`;
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+            
+            // Kalkulasi tanggal kedaluwarsa Mading
+            const expiryDate = new Date(now.getTime() + (durasiHari * 24 * 60 * 60 * 1000));
+            const expiryStr = expiryDate.toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'});
+
+            document.getElementById('mading-time').innerText = `- Update: Hari Ini, ${timeStr} WIB (Berlaku s/d ${expiryStr})`;
             
             document.getElementById('input-mading').value = '';
-            showModal("Berhasil", "Mading Digital berhasil diperbarui!", "success");
+            showModal("Berhasil", `Mading Digital berhasil diperbarui!\nPengumuman akan tampil untuk siswa selama ${durasiHari} Hari ke depan.`, "success");
         }
 
         window.toggleOpsiPG = function() {
@@ -1393,6 +1278,153 @@
             }
             showModal("Sukses", `Soal berhasil ditambahkan ke bank soal.`, "success");
         }
+
+        // --- FUNGSI UJIAN ONLINE SISWA YANG HILANG DIKEMBALIKAN DI SINI ---
+        
+        window.enterExamRoom = async function() {
+            if(!window.currentUser) { showModal("Tunggu", "Belum terkoneksi ke server.", "error"); return; }
+            
+            const inputRoom = document.getElementById('room-code-input').value.toUpperCase();
+            const namaPeserta = document.getElementById('exam-nama-input').value.trim();
+            
+            if(!namaPeserta) {
+                showModal("Perhatian", "Silakan masukkan NAMA ANDA terlebih dahulu!", "error");
+                return;
+            }
+
+            if(inputRoom !== window.currentRoomCode) {
+                showModal('Akses Ditolak', `Kode Room Tidak Ditemukan! (Hint: Coba ketik ${window.currentRoomCode})`, 'error');
+                return;
+            }
+
+            // PUSH PESERTA UJIAN LIVE KE FIREBASE
+            try {
+                const liveRef = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'live_exams');
+                const docSnap = await window.fbAddDoc(liveRef, {
+                    nama: namaPeserta,
+                    room: window.currentRoomCode,
+                    status: 'Mengerjakan',
+                    timestamp: window.fbServerTimestamp()
+                });
+                currentLiveExamId = docSnap.id; 
+            } catch(e) {
+                console.error("Gagal mengirim status live", e);
+            }
+
+            // Tampilkan Room Ujian
+            document.getElementById('exam-login-area').classList.add('hidden');
+            document.getElementById('exam-active-area').classList.remove('hidden');
+            
+            let soalHtml = `<div class="text-left w-full h-full text-white overflow-y-auto pr-2 custom-scrollbar">
+                <h4 class="font-bold text-lg mb-6 text-cyan-400 border-b border-gray-700 pb-2"><i class="fas fa-file-alt mr-2"></i> Lembar Soal Ujian</h4>`;
+            
+            if(bankSoal.length === 0) {
+                soalHtml += `<div class="flex flex-col items-center justify-center py-10"><i class="fas fa-exclamation-circle text-4xl text-gray-600 mb-4"></i><p class="text-center text-gray-400">Soal belum diterbitkan oleh guru.</p></div>`;
+            } else {
+                bankSoal.forEach((s, i) => {
+                    soalHtml += `<div class="mb-8 bg-gray-900/60 p-5 rounded-lg border border-gray-700 shadow-lg"><p class="mb-4 font-semibold text-gray-200 text-base leading-relaxed">${i+1}. ${s.pertanyaan}</p>`;
+                    if(s.tipe === 'PG' && s.opsi && s.opsi.length > 0) {
+                        soalHtml += `<div class="space-y-3 pl-2">`;
+                        s.opsi.forEach((opt, optIdx) => {
+                            soalHtml += `<label class="flex items-start cursor-pointer p-3 bg-gray-800 rounded-lg border border-gray-700 hover:border-cyan-500 transition group">
+                                <input type="radio" name="q${i}" class="mt-1 mr-3 w-4 h-4 text-cyan-600 bg-gray-900 border-gray-600 focus:ring-cyan-500">
+                                <span class="text-gray-300 group-hover:text-cyan-100">${opt}</span>
+                            </label>`;
+                        });
+                        soalHtml += `</div>`;
+                    } else {
+                        soalHtml += `<textarea rows="4" class="w-full bg-gray-800 border border-gray-600 text-white text-sm rounded-lg p-3 mt-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="Ketik jawaban esai Anda di sini..."></textarea>`;
+                    }
+                    soalHtml += `</div>`;
+                });
+                soalHtml += `<button onclick="kumpulkanUjian()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-4 px-4 rounded-lg transition shadow-lg mt-4"><i class="fas fa-paper-plane mr-2"></i> Kumpulkan Ujian</button>`;
+            }
+            soalHtml += `</div>`;
+
+            const outputArea = document.getElementById('exam-output-area');
+            outputArea.classList.remove('items-center', 'justify-center');
+            outputArea.classList.add('items-start');
+            outputArea.innerHTML = soalHtml;
+
+            startCountdown(examDuration * 60);
+        }
+
+        window.kumpulkanUjian = async function() {
+            clearInterval(countdownInterval);
+            
+            const timerEl = document.getElementById('exam-timer');
+            if (timerEl) {
+                timerEl.textContent = "SELESAI";
+                timerEl.classList.remove('text-red-400', 'animate-pulse', 'text-red-600');
+                timerEl.classList.add('text-green-400');
+            }
+
+            const statusEl = document.getElementById('exam-status-badge');
+            if (statusEl) {
+                statusEl.innerHTML = '<i class="fas fa-check-circle mr-1"></i> SELESAI';
+            }
+            
+            const namaPeserta = document.getElementById('exam-nama-input').value || 'Peserta Anonim';
+
+            // PUSH KE DB
+            if(window.currentUser) {
+                try {
+                    if(currentLiveExamId) {
+                        const refLive = window.fbDoc(window.db, 'artifacts', window.appId, 'public', 'data', 'live_exams', currentLiveExamId);
+                        await window.fbUpdateDoc(refLive, { status: 'Selesai' });
+                    }
+                    
+                    const refHasil = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'hasil_ujian');
+                    await window.fbAddDoc(refHasil, {
+                        nama: namaPeserta,
+                        room: window.currentRoomCode,
+                        waktuKumpul: new Date().toLocaleTimeString('id-ID'),
+                        timestamp: window.fbServerTimestamp()
+                    });
+                } catch (e) { console.error("Database Error:", e); }
+            }
+
+            const outputArea = document.getElementById('exam-output-area');
+            if (outputArea) {
+                outputArea.classList.remove('items-start');
+                outputArea.classList.add('items-center', 'justify-center');
+                outputArea.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-12 text-center fade-in">
+                        <div class="w-20 h-20 bg-green-900/50 rounded-full flex items-center justify-center mb-6 border-2 border-green-500 shadow-lg shadow-green-500/30">
+                            <i class="fas fa-check text-4xl text-green-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Ujian Berhasil Dikumpulkan!</h3>
+                        <p class="text-gray-400 mb-8">Jawaban Anda telah direkam dan disimpan secara permanen di server Firebase Guru.</p>
+                        <button onclick="navigate('siswa-menu')" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded transition border border-gray-500">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Keluar Ruangan Ujian
+                        </button>
+                    </div>
+                `;
+            }
+
+            showModal("Ujian Selesai!", "Kerja bagus! Seluruh jawaban Anda telah berhasil direkam ke Server Database Guru.", "success");
+        }
+
+        function startCountdown(seconds) {
+            clearInterval(countdownInterval);
+            const timerEl = document.getElementById('exam-timer');
+            
+            countdownInterval = setInterval(() => {
+                seconds--;
+                if(seconds < 0) {
+                    clearInterval(countdownInterval);
+                    timerEl.textContent = "WAKTU HABIS";
+                    timerEl.classList.remove('text-red-400');
+                    timerEl.classList.add('text-red-600', 'animate-pulse');
+                    return;
+                }
+                const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const s = (seconds % 60).toString().padStart(2, '0');
+                timerEl.textContent = `${m}:${s}`;
+            }, 1000);
+        }
+
+        // --- AKHIR DARI FUNGSI UJIAN ONLINE ---
 
         window.setLiveMonitorWaiting = function(room) {
             document.getElementById('live-monitor-body').innerHTML = `
