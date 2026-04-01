@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SheetJS untuk Export Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
         /* Tema Dark dengan Garis Abstrak Modern */
@@ -19,34 +21,50 @@
             min-height: 100vh;
         }
 
-        /* Latar Belakang Garis Abstrak (ACAK & MODERN) */
+        /* Latar Belakang Gambar Edukasi */
         .abstract-bg {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: -1;
-            background-color: #0f172a;
-            background-image: 
-                repeating-linear-gradient(35deg, rgba(6, 182, 212, 0.08) 0px, rgba(6, 182, 212, 0.08) 1px, transparent 1px, transparent 40px),
-                repeating-linear-gradient(-55deg, rgba(239, 68, 68, 0.06) 0px, rgba(239, 68, 68, 0.06) 1px, transparent 1px, transparent 60px),
-                repeating-linear-gradient(80deg, rgba(59, 130, 246, 0.05) 0px, rgba(59, 130, 246, 0.05) 1px, transparent 1px, transparent 90px),
-                repeating-linear-gradient(-15deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 120px);
-            animation: abstractFlow 30s linear infinite;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-image 0.8s ease-in-out;
         }
 
-        /* Efek bayangan gelap di pinggir agar teks tetap mudah dibaca */
+        /* 6 Variasi Tema Background Gambar Pendidikan */
+        .bg-theme-0 {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop'); 
+        }
+
+        .bg-theme-1 {
+            background-image: linear-gradient(rgba(30, 27, 75, 0.7), rgba(30, 27, 75, 0.85)), url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1973&auto=format&fit=crop'); 
+        }
+
+        .bg-theme-2 {
+            background-image: linear-gradient(rgba(2, 44, 34, 0.7), rgba(2, 44, 34, 0.85)), url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop'); 
+        }
+
+        .bg-theme-3 {
+            background-image: linear-gradient(rgba(67, 20, 7, 0.7), rgba(67, 20, 7, 0.85)), url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2132&auto=format&fit=crop'); 
+        }
+
+        .bg-theme-4 {
+            background-image: linear-gradient(rgba(8, 47, 73, 0.7), rgba(8, 47, 73, 0.85)), url('https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=2070&auto=format&fit=crop'); 
+        }
+
+        .bg-theme-5 {
+            background-image: linear-gradient(rgba(23, 23, 23, 0.7), rgba(23, 23, 23, 0.9)), url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop'); 
+        }
+
         .abstract-bg::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 50% 50%, transparent 10%, #0f172a 90%);
+            background: radial-gradient(circle at 50% 50%, transparent 20%, #000000 100%);
+            opacity: 0.6;
         }
 
-        @keyframes abstractFlow {
-            0% { background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px; }
-            100% { background-position: 100px 100px, -150px 100px, 200px -50px, -100px -100px; }
-        }
-
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #1e293b; }
         ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
@@ -63,7 +81,7 @@
     </style>
 </head>
 <body class="antialiased">
-    <div class="abstract-bg"></div>
+    <div id="main-bg" class="abstract-bg bg-theme-0"></div>
 
     <!-- HEADER -->
     <header class="glass-panel sticky top-0 z-50 px-6 py-4 flex items-center justify-between border-b border-gray-700">
@@ -110,7 +128,7 @@
 
             <!-- AREA A: UMUM -->
             <div class="glass-panel p-6 rounded-xl border border-gray-700">
-                <h3 class="text-xl font-bold mb-4 text-white border-b border-gray-700 pb-2"><i class="fas fa-bullhorn text-yellow-400 mr-2"></i> AREA UMUM (INFORMASI PUBLIK)</h3>
+                <h3 class="text-xl font-bold mb-4 text-white border-b border-gray-700 pb-2"><i class="fas fa-bullhorn text-yellow-400 mr-2"></i> AREA UMUM (INFORMASI DARI GURU)</h3>
                 
                 <div class="mt-6">
                     <!-- Mading Digital -->
@@ -597,21 +615,36 @@
                         </div>
                     </div>
 
-                    <!-- Database Links -->
+                    <!-- REKAP & LAPORAN (EXCEL & WHATSAPP) -->
                     <div class="glass-panel p-6 rounded-xl border border-gray-700">
-                        <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-database text-orange-400 mr-2"></i> 📊 Data Terkirim ke Server</h3>
-                        <p class="text-xs text-gray-400 mb-4">Project ID: <span class="text-white font-mono">portal-ujian-online</span></p>
-                        <div class="space-y-2">
-                            <button onclick="showModal('Firebase Data Terekam!', 'Semua data murid disimpan dalam 1 database utama dengan label Kelas.\nSaat di-export ke Excel, Kepala Sekolah/Admin dapat langsung mem-filter berdasarkan kelas masing-masing.', 'info')" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-600 text-left text-sm text-white py-2 px-4 rounded transition flex justify-between items-center">
-                                <span><i class="fas fa-table text-blue-400 mr-2"></i> Info Sinkronisasi DB</span>
-                                <i class="fas fa-cloud-upload-alt text-gray-500"></i>
+                        <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-database text-orange-400 mr-2"></i> 📊 Rekap & Laporan</h3>
+                        <p class="text-xs text-gray-400 mb-4">Export otomatis riwayat absensi berdasarkan Kelas yang Anda bina.</p>
+                        
+                        <!-- Unduh Excel -->
+                        <div class="space-y-3">
+                            <button onclick="downloadExcel()" class="w-full bg-green-700 hover:bg-green-600 border border-green-500 text-left text-sm text-white py-2 px-4 rounded transition flex justify-between items-center shadow-lg">
+                                <span><i class="fas fa-file-excel text-green-300 mr-2"></i> Download Rekap Excel</span>
+                                <i class="fas fa-download text-gray-300"></i>
                             </button>
+                        </div>
+
+                        <!-- Kirim WhatsApp Orang Tua -->
+                        <div class="mt-4 pt-4 border-t border-gray-700">
+                            <h4 class="text-sm font-bold text-white mb-2"><i class="fab fa-whatsapp text-green-400 mr-1"></i> Kirim Laporan ke Ortu</h4>
+                            <p class="text-[10px] text-gray-400 mb-2 leading-tight">Cari nama murid dan kirim rekapan absensi lengkap via WhatsApp.</p>
+                            <div class="space-y-2">
+                                <input type="text" id="wa-nama-siswa" placeholder="Nama Lengkap Siswa" class="w-full bg-gray-900 border border-gray-600 text-white text-xs rounded p-2 focus:border-green-500">
+                                <input type="text" id="wa-nomor" placeholder="No WA Ortu (Cth: 08123...)" class="w-full bg-gray-900 border border-gray-600 text-white text-xs rounded p-2 focus:border-green-500">
+                                <button onclick="kirimRekapWA()" class="w-full bg-gray-800 hover:bg-gray-700 border border-green-600 text-green-400 py-2 px-4 rounded transition text-xs font-bold shadow-lg text-center">
+                                    <i class="fas fa-paper-plane mr-1"></i> Buat & Kirim Pesan
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Input Kehadiran Manual -->
                     <div class="glass-panel p-6 rounded-xl border-t-4 border-red-500">
-                        <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-user-edit text-red-400 mr-2"></i> 📝 Catatan Kehadiran Guru</h3>
+                        <h3 class="text-lg font-bold mb-4 text-white"><i class="fas fa-user-edit text-red-400 mr-2"></i> 📝 Catatan Khusus Siswa</h3>
                         <p class="text-xs text-gray-400 mb-4">Input manual untuk murid yang bolos, alpa, atau izin khusus.</p>
                         <div class="space-y-3">
                             <div class="flex space-x-2">
@@ -638,10 +671,16 @@
                 <!-- Kolom Kanan: Monitoring Anak Wali -->
                 <div class="lg:col-span-2 glass-panel p-6 rounded-xl border-t-4 border-teal-500 flex flex-col h-full">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold text-white"><i class="fas fa-users-viewfinder text-teal-400 mr-2"></i> 📡 Live Monitor Absensi Kelas</h3>
+                        <h3 class="text-xl font-bold text-white"><i class="fas fa-users-viewfinder text-teal-400 mr-2"></i> 📡 Monitor Absensi Kelas</h3>
                         <!-- FILTER HARI UNTUK WALI KELAS DITAMBAHKAN DI SINI -->
                         <div class="flex space-x-2 items-center">
-                            <select id="filter-hari-walikelas" onchange="filterHariAbsensi()" class="bg-gray-800 border border-gray-600 text-teal-400 text-xs rounded px-2 py-1 focus:ring-teal-500 focus:border-teal-500 outline-none cursor-pointer">
+                            <!-- SEARCH BAR NAMA SISWA -->
+                            <div class="relative">
+                                <i class="fas fa-search absolute left-2 top-2 text-gray-400 text-xs"></i>
+                                <input type="text" id="search-nama-walikelas" onkeyup="window.renderTabelAbsensi()" placeholder="Cari Nama Siswa..." class="bg-gray-800 border border-gray-600 text-white text-xs rounded pl-7 pr-2 py-1.5 focus:ring-teal-500 focus:border-teal-500 outline-none w-32 md:w-48 transition-all">
+                            </div>
+                            
+                            <select id="filter-hari-walikelas" onchange="filterHariAbsensi()" class="bg-gray-800 border border-gray-600 text-teal-400 text-xs rounded px-2 py-1.5 focus:ring-teal-500 focus:border-teal-500 outline-none cursor-pointer">
                                 <option value="Semua">Semua Hari</option>
                                 <option value="Senin">Senin</option>
                                 <option value="Selasa">Selasa</option>
@@ -651,7 +690,7 @@
                                 <option value="Sabtu">Sabtu</option>
                                 <option value="Minggu">Minggu</option>
                             </select>
-                            <span class="text-xs bg-gray-800 border border-gray-600 text-green-400 py-1 px-3 rounded hidden md:inline-block"><i class="fas fa-filter mr-1"></i> Kelas Sendiri</span>
+                            <span class="text-xs bg-gray-800 border border-gray-600 text-green-400 py-1.5 px-3 rounded hidden md:inline-block"><i class="fas fa-filter mr-1"></i> Kelas Sendiri</span>
                         </div>
                     </div>
                     <div class="overflow-y-auto flex-1 bg-gray-900 rounded-lg border border-gray-700 p-2 custom-scrollbar">
@@ -789,9 +828,24 @@
         let bankSoal = []; 
         let currentLiveExamId = null; 
 
+        // Variabel untuk Background
+        let currentBgIndex = 0;
+        const totalThemes = 6;
+
         function navigate(viewId) {
             document.querySelectorAll('main > div[id^="view-"]').forEach(el => el.classList.add('hidden-view'));
             document.getElementById(`view-${viewId}`).classList.remove('hidden-view');
+
+            // --- Logika Pergantian Background Otomatis ---
+            const bgElement = document.getElementById('main-bg');
+            if (bgElement) {
+                // Hapus class tema saat ini
+                bgElement.classList.remove(`bg-theme-${currentBgIndex}`);
+                // Pindah ke tema selanjutnya (0 sampai 5, lalu kembali ke 0)
+                currentBgIndex = (currentBgIndex + 1) % totalThemes;
+                // Tambahkan class tema baru
+                bgElement.classList.add(`bg-theme-${currentBgIndex}`);
+            }
         }
 
         // --- FUNGSI TOGGLE PASSWORD VISIBILITY ---
@@ -884,13 +938,13 @@
 
             const dateObj = new Date();
             const payload = {
-                nama: nama,
+                nama: name, 
                 kelas: kelas,
                 hari: dateObj.toLocaleDateString('id-ID', {weekday: 'long'}),
                 tanggal: dateObj.toLocaleDateString('id-ID'),
                 waktu: dateObj.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}),
-                status: status,
-                catatan: catatan,
+                status: statusAbsen, 
+                catatan: "", 
                 isValid: true,
                 timestamp: window.fbServerTimestamp()
             };
@@ -900,10 +954,49 @@
                 const ref = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'absensi');
                 await window.fbAddDoc(ref, payload);
 
+                showModal("Catatan Tersimpan", `Data kehadiran untuk ${name} (${statusAbsen}) berhasil ditambahkan ke Firebase.`, "success");
+
+                document.getElementById('student-name').value = '';
+                document.getElementById('token-input').value = '';
+            } catch(e) {
+                showModal("Database Error", "Gagal menyimpan: " + e.message, "error");
+            }
+        }
+
+        // --- FUNGSI ABSENSI MANUAL GURU ---
+        window.submitAbsenManual = async function() {
+            if(!window.currentUser) { showModal("Tunggu", "Belum terkoneksi ke server Database.", "info"); return; }
+
+            const nama = document.getElementById('manual-nama').value.trim();
+            const kelas = document.getElementById('manual-kelas').value.trim();
+            const status = document.getElementById('manual-status').value;
+            const catatan = document.getElementById('manual-catatan').value.trim();
+
+            if(!nama || !kelas) {
+                showModal("Data Tidak Lengkap", "Mohon isi Nama Murid terlebih dahulu!", "error");
+                return;
+            }
+
+            const dateObj = new Date();
+            const payload = {
+                nama: nama,
+                kelas: kelas,
+                hari: dateObj.toLocaleDateString('id-ID', {weekday: 'long'}),
+                tanggal: dateObj.toLocaleDateString('id-ID'),
+                waktu: dateObj.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}),
+                status: status,
+                catatan: catatan,
+                isValid: true, // Manual dari guru selalu valid
+                timestamp: window.fbServerTimestamp()
+            };
+
+            try {
+                const ref = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'absensi');
+                await window.fbAddDoc(ref, payload);
+
                 showModal("Catatan Tersimpan", `Data kehadiran manual untuk ${nama} (${status}) berhasil ditambahkan ke Firebase.`, "success");
 
                 document.getElementById('manual-nama').value = '';
-                document.getElementById('manual-kelas').value = '';
                 document.getElementById('manual-catatan').value = '';
             } catch(e) {
                 showModal("Database Error", "Gagal menyimpan: " + e.message, "error");
@@ -913,7 +1006,7 @@
         // --- FILTER HARI (WALI KELAS) ---
         window.filterHariAbsensi = function() {
             window.activeFilterHari = document.getElementById('filter-hari-walikelas').value;
-            if(window.renderTabelAbsensi) window.renderTabelAbsensi(); // Render ulang dengan filter yang baru
+            if(window.renderTabelAbsensi) window.renderTabelAbsensi(); 
         }
 
         // Render Data Absensi dari variabel global (yang diupdate oleh onSnapshot)
@@ -921,6 +1014,10 @@
             const tbodySiswa = document.getElementById('absen-table-body');
             const tbodyWali = document.getElementById('walikelas-absen-body');
             
+            // Baca nilai pencarian nama
+            const searchInput = document.getElementById('search-nama-walikelas');
+            const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : "";
+
             let htmlSiswa = '';
             let htmlWali = '';
             let countWali = 0;
@@ -955,20 +1052,21 @@
                     </tr>
                 `;
 
-                // FILTERING TABEL WALI KELAS BERDASARKAN KELAS & HARI
+                // FILTERING TABEL WALI KELAS BERDASARKAN KELAS, HARI, DAN PENCARIAN NAMA
                 const isKelasMatch = (window.activeWaliKelas === "" || item.kelas.toUpperCase() === window.activeWaliKelas);
                 
-                // Pengecekan aman untuk hari
                 let isHariMatch = false;
                 if (window.activeFilterHari === "Semua") {
                     isHariMatch = true;
                 } else if (item.hari) {
-                    const dataHari = item.hari.toLowerCase().replace("'", ""); // Hilangkan tanda petik misal Jum'at -> jumat
+                    const dataHari = item.hari.toLowerCase().replace("'", ""); 
                     const filterHari = window.activeFilterHari.toLowerCase();
                     isHariMatch = (dataHari === filterHari);
                 }
 
-                if (isKelasMatch && isHariMatch) {
+                const isNamaMatch = searchVal === "" || (item.nama && item.nama.toLowerCase().includes(searchVal));
+
+                if (isKelasMatch && isHariMatch && isNamaMatch) {
                     countWali++;
                     htmlWali += `
                         <tr class="border-b border-gray-700/50 hover:bg-gray-800/50 transition">
@@ -989,12 +1087,128 @@
             if (tbodyWali) {
                 if(countWali === 0) {
                     let displayHari = window.activeFilterHari === "Semua" ? "sebelumnya" : window.activeFilterHari;
-                    tbodyWali.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-gray-500 italic">Belum ada absen dari murid kelas ${window.activeWaliKelas} pada hari ${displayHari}...</td></tr>`;
+                    if (searchVal !== "") {
+                        tbodyWali.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-gray-500 italic">Tidak ditemukan riwayat absen untuk nama "<span class="text-white">${searchVal}</span>" di kelas ${window.activeWaliKelas}.</td></tr>`;
+                    } else {
+                        tbodyWali.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-gray-500 italic">Belum ada absen dari murid kelas ${window.activeWaliKelas} pada hari ${displayHari}...</td></tr>`;
+                    }
                 } else {
                     tbodyWali.innerHTML = htmlWali;
                 }
             }
         }
+
+        // --- FUNGSI EXPORT EXCEL WALI KELAS ---
+        window.downloadExcel = function() {
+            if (!window.dataAbsensi || window.dataAbsensi.length === 0) {
+                showModal("Data Kosong", "Belum ada data absensi masuk untuk diunduh.", "error");
+                return;
+            }
+
+            // Filter data khusus kelas yang sedang dibina (login)
+            const dataKelas = window.dataAbsensi.filter(item => item.kelas.toUpperCase() === window.activeWaliKelas);
+            
+            if (dataKelas.length === 0) {
+                showModal("Data Kosong", `Belum ada riwayat absensi untuk kelas ${window.activeWaliKelas} Anda.`, "info");
+                return;
+            }
+
+            // Map data agar kolomnya rapi di Excel
+            const excelData = dataKelas.map((item, index) => ({
+                "No": index + 1,
+                "Nama Murid": item.nama,
+                "Kelas": item.kelas,
+                "Hari": item.hari,
+                "Tanggal": item.tanggal,
+                "Jam": item.waktu,
+                "Status": item.status,
+                "Catatan Guru": item.catatan || "-",
+                "Keterangan Sistem": item.isValid ? "Tervalidasi" : "Ditolak"
+            }));
+
+            try {
+                // Konversi array JSON ke tabel Worksheet
+                const ws = XLSX.utils.json_to_sheet(excelData);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Rekap_Absensi");
+
+                // Generate nama file otomatis sesuai hari ini
+                const rawDate = new Date().toLocaleDateString('id-ID').replace(/\//g, '-');
+                const fileName = `Rekap_Absensi_${window.activeWaliKelas}_${rawDate}.xlsx`;
+
+                // Picu download file 
+                XLSX.writeFile(wb, fileName);
+                showModal("Berhasil!", `File Excel absensi (${fileName}) otomatis terunduh dan disimpan di perangkat Anda.`, "success");
+            } catch(e) {
+                showModal("Error Generate File", "Gagal membuat file excel: " + e.message, "error");
+            }
+        };
+
+        // --- FUNGSI REKAP PER SISWA & KIRIM WHATSAPP ---
+        window.kirimRekapWA = function() {
+            const namaSiswa = document.getElementById('wa-nama-siswa').value.trim().toLowerCase();
+            let noWA = document.getElementById('wa-nomor').value.trim();
+
+            if (!namaSiswa || !noWA) {
+                showModal("Data Tidak Lengkap", "Mohon isi Nama Siswa dan Nomor WA Orang Tua terlebih dahulu.", "error");
+                return;
+            }
+
+            // Format nomor telepon menjadi standar internasional WA (62)
+            if (noWA.startsWith('0')) {
+                noWA = '62' + noWA.substring(1);
+            } else if (noWA.startsWith('+')) {
+                noWA = noWA.substring(1);
+            }
+
+            // Cari data absensi siswa bersangkutan khusus di kelas Wali
+            const dataAnak = window.dataAbsensi.filter(item => 
+                item.kelas.toUpperCase() === window.activeWaliKelas && 
+                item.nama.toLowerCase().includes(namaSiswa)
+            );
+
+            if (dataAnak.length === 0) {
+                showModal("Data Tidak Ditemukan", `Sistem tidak menemukan riwayat absen untuk nama "${namaSiswa}" di kelas ${window.activeWaliKelas} sejauh ini.`, "error");
+                return;
+            }
+
+            // Hitung Rekapitulasi (Total Semua Masuk)
+            let namaAsli = dataAnak[0].nama;
+            let totalKehadiran = dataAnak.length;
+            let rekap = { Hadir: 0, Sakit: 0, Izin: 0, Bolos: 0, Alpa: 0 };
+            
+            dataAnak.forEach(item => {
+                if(rekap[item.status] !== undefined) rekap[item.status]++;
+                else rekap["Alpa"]++; // Fallback
+            });
+
+            // Susun Teks Pesan WhatsApp
+            let text = `*LAPORAN REKAP ABSENSI SISWA*\n*SMP ULUL ALBAB*\n\n`;
+            text += `Yth. Bapak/Ibu Orang Tua dari:\n`;
+            text += `*Nama :* ${namaAsli}\n`;
+            text += `*Kelas :* ${window.activeWaliKelas}\n\n`;
+            text += `Berikut adalah rekapitulasi kehadiran anak Bapak/Ibu yang tercatat di sistem kami sejauh ini:\n\n`;
+            text += `- 🟢 *Hadir :* ${rekap.Hadir} hari\n`;
+            text += `- 🔵 *Sakit :* ${rekap.Sakit} hari\n`;
+            text += `- 🟡 *Izin :* ${rekap.Izin} hari\n`;
+            if (rekap.Bolos > 0) text += `- 🔴 *Bolos :* ${rekap.Bolos} hari\n`;
+            if (rekap.Alpa > 0) text += `- ⚫ *Alpa :* ${rekap.Alpa} hari\n`;
+            text += `\n*Total Rekam Jejak:* ${totalKehadiran} riwayat.\n\n`;
+            text += `Mohon kerjasama Bapak/Ibu untuk terus memantau perkembangan dan kedisiplinan ananda. Terima kasih.\n\n`;
+            text += `Salam Hormat,\n*Wali Kelas ${window.activeWaliKelas}*\n_${window.activeWaliNama}_`;
+
+            // Ubah teks menjadi format link URL aman
+            const encodedText = encodeURIComponent(text);
+            const waLink = `https://wa.me/${noWA}?text=${encodedText}`;
+
+            // Reset field input
+            document.getElementById('wa-nama-siswa').value = '';
+            document.getElementById('wa-nomor').value = '';
+
+            // Buka Tab WhatsApp Web / App
+            window.open(waLink, '_blank');
+            showModal("Membuka WhatsApp", "Laporan telah selesai disusun dan sedang diarahkan ke aplikasi WhatsApp Anda.", "success");
+        };
 
         // --- FUNGSI GURU UMUM ---
         window.loginTeacher = function() {
@@ -1016,7 +1230,6 @@
             const kelas = document.getElementById('reg-kelas').value.trim().toUpperCase();
             const pwd = document.getElementById('reg-pwd').value;
 
-            // KODE RAHASIA ADMIN (Mencegah Sembarang Orang Buat Akun)
             if (adminCode !== "ADMIN123") {
                 showModal("Akses Ditolak", "Kode Rahasia Admin yang Anda masukkan SALAH.\nAnda tidak memiliki izin membuat akun.", "error");
                 return;
@@ -1028,27 +1241,23 @@
             }
 
             try {
-                // Gunakan nama 'kelas' sebagai ID dokumen agar 1 kelas = 1 akun wali
                 const ref = window.fbDoc(window.db, 'artifacts', window.appId, 'public', 'data', 'wali_kelas_accounts', kelas);
                 
-                // Cek Apakah Kelas Tersebut Sudah Ada Walinya
                 const docSnap = await window.fbGetDoc(ref);
                 if (docSnap.exists()) {
                     showModal("Gagal Mendaftar", `Kelas ${kelas} sudah memiliki akun Wali Kelas yang terdaftar di sistem.`, "error");
                     return;
                 }
 
-                // Simpan ke Firestore
                 await window.fbSetDoc(ref, {
                     nama: nama,
                     kelas: kelas,
-                    password: pwd, // Disimpan mentah untuk simulasi
+                    password: pwd, 
                     timestamp: window.fbServerTimestamp()
                 });
 
                 showModal("Pembuatan Akun Berhasil!", `Selamat datang ${nama}!\n\nAkun Wali Kelas untuk ${kelas} berhasil dibuat.\nSistem akan mengembalikan Anda ke halaman Login.`, "success");
                 
-                // Reset form
                 document.getElementById('reg-admin-code').value = '';
                 document.getElementById('reg-nama').value = '';
                 document.getElementById('reg-kelas').value = '';
@@ -1060,7 +1269,7 @@
             }
         }
 
-        // --- FUNGSI LOGIN WALI KELAS BACA DARI DATABASE ---
+        // --- FUNGSI LOGIN WALI KELAS ---
         window.loginWaliKelas = async function() {
             if(!window.currentUser) { showModal("Tunggu", "Belum terkoneksi ke server.", "info"); return; }
 
@@ -1073,25 +1282,24 @@
             }
 
             try {
-                // Cari dokumen berdasarkan kelas
                 const ref = window.fbDoc(window.db, 'artifacts', window.appId, 'public', 'data', 'wali_kelas_accounts', targetKelas);
                 const docSnap = await window.fbGetDoc(ref);
 
                 if (docSnap.exists()) {
                     const dataAkun = docSnap.data();
                     
-                    // Verifikasi Password
                     if (dataAkun.password === pwd) {
                         window.activeWaliKelas = targetKelas;
                         window.activeWaliNama = dataAkun.nama;
                         
-                        // Update UI Dashboard sesuai kelas guru yang login
                         document.getElementById('display-active-kelas').innerText = `- ${targetKelas} (${dataAkun.nama})`;
                         document.getElementById('manual-kelas').value = targetKelas; 
                         
-                        // Reset Dropdown Hari ke "Semua" saat baru login
                         document.getElementById('filter-hari-walikelas').value = "Semua";
                         window.activeFilterHari = "Semua";
+                        
+                        const searchInput = document.getElementById('search-nama-walikelas');
+                        if(searchInput) searchInput.value = "";
                         
                         navigate('guru-walikelas'); 
                         document.getElementById('wali-pwd').value = '';
@@ -1123,7 +1331,7 @@
             }
 
             window.activeTeacherToken = input;
-            window.tokenExpiryTime = Date.now() + (durasiMenit * 60000); // 1 Menit = 60000 ms
+            window.tokenExpiryTime = Date.now() + (durasiMenit * 60000); 
 
             document.getElementById('active-token-display').textContent = window.activeTeacherToken;
             
@@ -1131,7 +1339,6 @@
             const expiryTimeStr = expiryDate.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
             document.getElementById('token-expiry-display').textContent = `Berlaku s/d: ${expiryTimeStr} WIB`;
 
-            // Auto-reset visual jika token habis waktunya
             setTimeout(() => {
                 if (window.activeTeacherToken === input && Date.now() >= window.tokenExpiryTime) {
                     window.activeTeacherToken = "";
@@ -1156,7 +1363,6 @@
             const now = new Date();
             const timeStr = now.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
             
-            // Kalkulasi tanggal kedaluwarsa Mading
             const expiryDate = new Date(now.getTime() + (durasiHari * 24 * 60 * 60 * 1000));
             const expiryStr = expiryDate.toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'});
 
@@ -1279,8 +1485,6 @@
             showModal("Sukses", `Soal berhasil ditambahkan ke bank soal.`, "success");
         }
 
-        // --- FUNGSI UJIAN ONLINE SISWA YANG HILANG DIKEMBALIKAN DI SINI ---
-        
         window.enterExamRoom = async function() {
             if(!window.currentUser) { showModal("Tunggu", "Belum terkoneksi ke server.", "error"); return; }
             
@@ -1297,7 +1501,6 @@
                 return;
             }
 
-            // PUSH PESERTA UJIAN LIVE KE FIREBASE
             try {
                 const liveRef = window.fbCollection(window.db, 'artifacts', window.appId, 'public', 'data', 'live_exams');
                 const docSnap = await window.fbAddDoc(liveRef, {
@@ -1311,7 +1514,6 @@
                 console.error("Gagal mengirim status live", e);
             }
 
-            // Tampilkan Room Ujian
             document.getElementById('exam-login-area').classList.add('hidden');
             document.getElementById('exam-active-area').classList.remove('hidden');
             
@@ -1366,7 +1568,6 @@
             
             const namaPeserta = document.getElementById('exam-nama-input').value || 'Peserta Anonim';
 
-            // PUSH KE DB
             if(window.currentUser) {
                 try {
                     if(currentLiveExamId) {
@@ -1423,8 +1624,6 @@
                 timerEl.textContent = `${m}:${s}`;
             }, 1000);
         }
-
-        // --- AKHIR DARI FUNGSI UJIAN ONLINE ---
 
         window.setLiveMonitorWaiting = function(room) {
             document.getElementById('live-monitor-body').innerHTML = `
